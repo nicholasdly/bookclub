@@ -6,7 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { type SignedInAuthObject, type SignedOutAuthObject, getAuth } from "@clerk/nextjs/server";
+import {
+  type SignedInAuthObject,
+  type SignedOutAuthObject,
+  getAuth,
+} from "@clerk/nextjs/server";
 import { TRPCError, initTRPC } from "@trpc/server";
 import { type NextRequest } from "next/server";
 import superjson from "superjson";
@@ -31,7 +35,7 @@ interface CreateContextOptions {
   auth: SignedInAuthObject | SignedOutAuthObject;
 }
 
-export const createInnerTRPCContext = async (opts: CreateContextOptions) => { 
+export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   return {
     db,
     ...opts,
@@ -42,8 +46,8 @@ export const createTRPCContext = async (opts: { req: NextRequest }) => {
   return createInnerTRPCContext({
     headers: opts.req.headers,
     auth: getAuth(opts.req),
-  })
-}
+  });
+};
 
 /**
  * 2. INITIALIZATION
