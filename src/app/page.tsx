@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   BookIcon,
-  BookmarkFilledIcon,
+  BookclubLogoIcon,
   BooksIcon,
   MessageOffIcon,
   MoodSmileBeamIcon,
@@ -9,8 +9,10 @@ import {
   UserCircleIcon,
 } from "./_components/icons";
 import { Button } from "./_components/shadcn-ui/button";
+import { SignUpButton, SignInButton } from "@clerk/nextjs";
+import { env } from "process";
 
-export default function Home() {
+export default function Landing() {
   return (
     <>
       <Header />
@@ -30,8 +32,8 @@ function Header() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center gap-16">
           <Link href="/" className="flex items-center gap-2">
-            <BookmarkFilledIcon className="h-10 w-auto text-stone-500" />
-            <span className="text-3xl font-bold">tldr</span>
+            <BookclubLogoIcon className="h-8 w-auto" />
+            <span className="text-xl font-bold">Bookclub</span>
           </Link>
           <div className="hidden lg:flex lg:gap-10">
             <Button variant="ghost" asChild>
@@ -42,9 +44,20 @@ function Header() {
             </Button>
           </div>
         </div>
-        <Button variant="outline" className="pointer-events-none">
-          Coming soon
-        </Button>
+        {env.NODE_ENV === "production" ? (
+          <Button variant="outline" className="pointer-events-none">
+            Coming soon
+          </Button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <SignInButton>
+              <Button variant="outline">Sign in</Button>
+            </SignInButton>
+            <SignUpButton>
+              <Button>Sign up</Button>
+            </SignUpButton>
+          </div>
+        )}
       </nav>
     </header>
   );
@@ -58,14 +71,22 @@ function Hero() {
           The social platform for bookworms.
         </h1>
         <p className="mt-6 text-lg text-stone-600">
-          <span className="font-bold">tldr</span> is a place to read, review,
-          and talk about books with the internet. Keep track of the books
-          you&apos;ve read, interact with other readers, and build your bookworm
-          community—all in one place.
+          <span className="font-bold">Bookclub</span> is a place to read,
+          review, and talk about books with the internet. Keep track of the
+          books you&apos;ve read, interact with other readers, and build your
+          bookworm community—all in one place.
         </p>
-        <Button variant="outline" className="pointer-events-none mt-6">
-          Coming soon
-        </Button>
+        {env.NODE_ENV === "production" ? (
+          <Button variant="outline" className="pointer-events-none mt-6">
+            Coming soon
+          </Button>
+        ) : (
+          <SignUpButton>
+            <Button variant="outline" className="mt-6">
+              Join today
+            </Button>
+          </SignUpButton>
+        )}
       </div>
     </div>
   );
@@ -122,8 +143,8 @@ function Features() {
             All the features you want, with more to come.
           </h2>
           <p className="mt-2 text-lg text-stone-400">
-            <span className="font-bold">tldr</span> was built for readers, and
-            pulls inspiration from the best parts of other social media
+            <span className="font-bold">Bookclub</span> was built for readers,
+            and pulls inspiration from the best parts of other social media
             platforms such as Goodreads and Twitter to provide a performant and
             intuitive user experience.
           </p>
@@ -147,19 +168,19 @@ function Features() {
 function FAQs() {
   const faqs = [
     {
-      question: "Is tldr free?",
+      question: "Is Bookclub free?",
       answer:
-        "Yes! tldr in its entirety will be completely free to use, although donations will go a long way to support the team.",
+        "Yes! Bookclub in its entirety will be completely free to use, although donations will go a long way to support the team.",
     },
     {
-      question: "How is tldr any different from Goodreads?",
+      question: "How is Bookclub any different from Goodreads?",
       answer:
-        "tldr's primary feature is its Twitter-like personal feed and social interactions, on top of having a beautifully intuitive book tracker. tldr has no affiliation with Amazon or any other corporation.",
+        "Bookclub's primary feature is its Twitter-like personal feed and social interactions, on top of having a beautifully intuitive book tracker. Bookclub has no affiliation with Amazon or any other corporation.",
     },
     {
-      question: "When can I use tldr?",
+      question: "When can I use Bookclub?",
       answer:
-        "tldr is currently being worked on as a passion project by a one person team that already work full time, so it will be a long time before a full release. Expect beta (or even alpha) releases though!",
+        "Bookclub is currently being worked on as a passion project by a one person team that already work full time, so it will be a long time before a full release. Expect beta (or even alpha) releases though!",
     },
     {
       question: "What is planned in the future?",
@@ -167,14 +188,14 @@ function FAQs() {
         "An equally as intuitive mobile app is something the team would really like to look into in the future.",
     },
     {
-      question: "Who's behind tldr?",
+      question: "Who's behind Bookclub?",
       answer:
-        "Nicholas Ly is one and only web developer working on tldr at the moment as a passion project on the side of his full time job.",
+        "Nicholas Ly is one and only web developer working on Bookclub at the moment as a passion project on the side of his full time job.",
     },
     {
-      question: "Can I help work on tldr?",
+      question: "Can I help work on Bookclub?",
       answer:
-        "Currently, tldr is a private project primarily for the learning experience. As the core of tldr gets flushed out though, you can expect the website to be open sourced and open to contribution.",
+        "Currently, Bookclub is a private project primarily for the learning experience. As the core of Bookclub gets flushed out though, you can expect the website to be open sourced and open to contribution.",
     },
   ];
 
@@ -221,9 +242,9 @@ function Footer() {
         <div className="flex justify-center pb-6 pt-16 lg:py-16">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2">
-              <BookmarkFilledIcon className="h-12 w-auto text-stone-500" />
+              <BookclubLogoIcon className="h-12 w-auto" />
               <div>
-                <p className="text-lg font-semibold">tldr</p>
+                <p className="text-lg font-semibold">Bookclub</p>
                 <p className="mt-0.5 text-sm">
                   The social platform for bookworms.
                 </p>
