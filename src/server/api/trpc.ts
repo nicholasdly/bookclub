@@ -6,17 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import {
-  type SignedInAuthObject,
-  type SignedOutAuthObject,
-  getAuth,
-} from "@clerk/nextjs/server";
 import { TRPCError, initTRPC } from "@trpc/server";
-import { type NextRequest } from "next/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
 import { db } from "~/server/db";
+import { auth } from "@clerk/nextjs";
 
 /**
  * 1. CONTEXT
@@ -30,23 +24,13 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-interface CreateContextOptions {
-  headers: Headers;
-  auth: SignedInAuthObject | SignedOutAuthObject;
-}
-
-export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const session = auth();
   return {
     db,
+    session,
     ...opts,
   };
-};
-
-export const createTRPCContext = async (opts: { req: NextRequest }) => {
-  return createInnerTRPCContext({
-    headers: opts.req.headers,
-    auth: getAuth(opts.req),
-  });
 };
 
 /**
@@ -93,15 +77,15 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
-const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.auth.userId) throw new TRPCError({ code: "UNAUTHORIZED" });
-  return next({ ctx: { auth: ctx.auth } });
-});
-
 /**
  * Private (authenticated) procedure
  *
  * This is another piece you may use to build new queries and mutations on your tRPC API, but it guarentees the user is
  * authorized. If the user is unauthorized, a TRPC error is thrown.
  */
-export const privateProcedure = t.procedure.use(isAuthed);
+export const privateProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({ ctx: { auth: ctx.session } });
+});
