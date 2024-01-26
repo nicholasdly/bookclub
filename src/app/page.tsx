@@ -10,6 +10,7 @@ import {
 } from "./_components/icons";
 import { Button } from "./_components/shadcn-ui/button";
 import { SignUpButton, SignInButton } from "@clerk/nextjs";
+import { env } from "process";
 
 export default function Landing() {
   return (
@@ -43,14 +44,20 @@ function Header() {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <SignInButton>
-            <Button variant="outline">Sign in</Button>
-          </SignInButton>
-          <SignUpButton>
-            <Button>Sign up</Button>
-          </SignUpButton>
-        </div>
+        {env.NODE_ENV === "production" ? (
+          <Button variant="outline" className="pointer-events-none">
+            Coming soon
+          </Button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <SignInButton>
+              <Button variant="outline">Sign in</Button>
+            </SignInButton>
+            <SignUpButton>
+              <Button>Sign up</Button>
+            </SignUpButton>
+          </div>
+        )}
       </nav>
     </header>
   );
@@ -69,11 +76,17 @@ function Hero() {
           books you&apos;ve read, interact with other readers, and build your
           bookworm community—all in one place.
         </p>
-        <SignUpButton>
-          <Button variant="outline" className="mt-6">
-            Join today
+        {env.NODE_ENV === "production" ? (
+          <Button variant="outline" className="pointer-events-none mt-6">
+            Coming soon
           </Button>
-        </SignUpButton>
+        ) : (
+          <SignUpButton>
+            <Button variant="outline" className="mt-6">
+              Join today
+            </Button>
+          </SignUpButton>
+        )}
       </div>
     </div>
   );
