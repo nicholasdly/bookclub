@@ -1,14 +1,15 @@
-# Bookclub - The social platform for bookworms.
+# Bookclub - The social platform for bookworms
 
 > Bookclub is a place to read, review, and talk about books with the internet. Keep track of the books you've read, interact with other readers, and build your bookworm community—all in one place.
 
-Inspired by the best parts of other flashcard programs like [Anki](https://apps.ankiweb.net/) and [Quizlet](https://quizlet.com/), **minicards** is designed and built to bring simplicity back into flashcard software, while still being an incredibly effective method of study and memorization.
-
 Inspired by the best parts of other social platforms such as [Goodreads](https://www.goodreads.com/) and [X](https://twitter.com/), **Bookclub** is built to be a community for readers on the internet—designed with readers in mind.
+
+Check out the current release here: [bookclub.social](https://bookclub.social/)
+Check out the development release here: [dev.bookclub.social](https://dev.bookclub.social/)
 
 ## Development
 
-At its core, **minicards** is built with the [T3 stack](https://create.t3.gg/) with these tools:
+At its core, **Bookclub** is built with the [T3 stack](https://create.t3.gg/) with these tools:
 
 - **Web Framework**: [Next.js](https://nextjs.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/)
@@ -16,6 +17,8 @@ At its core, **minicards** is built with the [T3 stack](https://create.t3.gg/) w
 - **Database**: [Planetscale](https://planetscale.com/) and [Meilisearch](https://www.meilisearch.com/)
 - **Authentication**: [Clerk](https://clerk.com/)
 - **Deployment**: [Vercel](https://vercel.com/)
+
+You can view the development history via the [Bookclub Roadmap](https://github.com/users/nicholasdly/projects/7) GitHub project.
 
 ### Prerequisites
 
@@ -43,15 +46,25 @@ CLERK_SECRET_KEY=YOUR_KEY_HERE
 npm run dev
 ```
 
+5. Run the following command to open the Drizzle database studio.
+```zsh
+npm run db:studio
+```
+
+6. Run the following command to push changes to the Planetscale database schema(s).
+```zsh
+npm run db:push
+```
+
 ### Contributing
 
-1. Create a new branch from the `develop` branch.
+1. Create a new branch from the `develop` branch, preferably based off of an item under the "Ready" column of the [Bookclub Roadmap](https://github.com/users/nicholasdly/projects/7) Github project.
 ```zsh
 # New feature branch
-git checkout -b feature/<issue_id>-<description>
+git checkout -b feature/<project_item_id>-<description>
 
 # New bug fix branch
-git checkout -b bugfix/<issue_id>-<description>
+git checkout -b bugfix/<project_item_id>-<description>
 ```
 
 2. Stage, commit, and push your changes.
