@@ -84,8 +84,8 @@ export const publicProcedure = t.procedure;
  * authorized. If the user is unauthorized, a TRPC error is thrown.
  */
 export const privateProcedure = t.procedure.use(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  if (!ctx.session.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
-  return next({ ctx: { auth: ctx.session } });
+  return next({ ctx  });
 });
