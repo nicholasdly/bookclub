@@ -9,8 +9,14 @@ import {
   UserCircleIcon,
 } from "./_components/icons";
 import { Button } from "./_components/shadcn-ui/button";
-import { SignUpButton, SignInButton } from "@clerk/nextjs";
-import { env } from "process";
+import {
+  SignUpButton,
+  SignInButton,
+  ClerkLoading,
+  ClerkLoaded,
+} from "@clerk/nextjs";
+import { env } from "~/env";
+import { Skeleton } from "./_components/shadcn-ui/skeleton";
 
 export default function Landing() {
   return (
@@ -44,18 +50,26 @@ function Header() {
             </Button>
           </div>
         </div>
-        {env.NODE_ENV === "production" ? (
+        {env.ENABLE_PRE_RELEASE_FEATURES === "false" ? (
           <Button variant="outline" className="pointer-events-none">
             Coming soon
           </Button>
         ) : (
-          <div className="flex items-center gap-2">
-            <SignInButton>
-              <Button variant="outline">Sign in</Button>
-            </SignInButton>
-            <SignUpButton>
-              <Button>Sign up</Button>
-            </SignUpButton>
+          <div className="flex items-center gap-2 transition-all">
+            <ClerkLoading>
+              <Skeleton className="h-10 w-20" />
+              <Skeleton className="h-10 w-20 bg-primary" />
+            </ClerkLoading>
+            <ClerkLoaded>
+              <SignInButton>
+                <Button variant="outline" className="w-20">
+                  Sign in
+                </Button>
+              </SignInButton>
+              <SignUpButton>
+                <Button className="w-20">Sign up</Button>
+              </SignUpButton>
+            </ClerkLoaded>
           </div>
         )}
       </nav>
@@ -76,16 +90,23 @@ function Hero() {
           books you&apos;ve read, interact with other readers, and build your
           bookworm community—all in one place.
         </p>
-        {env.NODE_ENV === "production" ? (
+        {env.ENABLE_PRE_RELEASE_FEATURES === "false" ? (
           <Button variant="outline" className="pointer-events-none mt-6">
             Coming soon
           </Button>
         ) : (
-          <SignUpButton>
-            <Button variant="outline" className="mt-6">
-              Join today
-            </Button>
-          </SignUpButton>
+          <>
+            <ClerkLoading>
+              <Skeleton className="mt-6 h-10 w-28" />
+            </ClerkLoading>
+            <ClerkLoaded>
+              <SignUpButton>
+                <Button variant="outline" className="mt-6 w-28">
+                  Join today
+                </Button>
+              </SignUpButton>
+            </ClerkLoaded>
+          </>
         )}
       </div>
     </div>
