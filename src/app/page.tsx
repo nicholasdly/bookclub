@@ -10,7 +10,7 @@ import {
 } from "./_components/icons";
 import { Button } from "./_components/shadcn-ui/button";
 import { SignUpButton, SignInButton } from "@clerk/nextjs";
-import { env } from "process";
+import { env } from '~/env';
 
 export default function Landing() {
   return (
