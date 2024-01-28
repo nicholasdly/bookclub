@@ -23,15 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider afterSignInUrl="/home" afterSignUpUrl="/home">
-      <html lang="en">
+    <html lang="en">
+      <ClerkProvider afterSignInUrl="/home" afterSignUpUrl="/home">
         <body className={`font-sans ${inter.variable}`}>
           <TRPCReactProvider cookies={cookies().toString()}>
             {children}
             <Toaster />
           </TRPCReactProvider>
         </body>
-      </html>
-    </ClerkProvider>
+      </ClerkProvider>
+    </html>
   );
 }

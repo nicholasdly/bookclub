@@ -1,7 +1,7 @@
 "use client";
 
 import { type RouterOutputs } from "~/trpc/shared";
-import { Avatar, AvatarImage } from "./shadcn-ui/avatar";
+import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
