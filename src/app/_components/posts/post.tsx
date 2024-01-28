@@ -26,7 +26,7 @@ export default function Post(post: RouterOutputs["posts"]["getAll"][number]) {
           </div>
           <div />
         </div>
-        <p className="m-3">{post.content}</p>
+        <p className="m-3 hyphens-auto">{post.content}</p>
       </div>
     </div>
   );
