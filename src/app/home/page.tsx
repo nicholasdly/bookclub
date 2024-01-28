@@ -11,7 +11,7 @@ export default async function Home() {
     <>
       <Header />
       <main>
-        <div className="mx-auto max-w-2xl border px-4 mt-6 flex flex-col gap-2">
+        <div className="mx-auto mt-6 flex max-w-2xl flex-col gap-2 border px-4">
           <PostEditor avatar={user.imageUrl} username={user.username!} />
           <Feed />
         </div>
@@ -25,7 +25,9 @@ async function Feed() {
 
   return (
     <>
-      {posts.map((post) => <Post {...post} key={post.id} />)}
+      {posts.map((post) => (
+        <Post {...post} key={post.id} />
+      ))}
     </>
   );
 }

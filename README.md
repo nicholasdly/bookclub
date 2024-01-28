@@ -29,11 +29,13 @@ To get started contributing to **Bookclub**, it is assumed you have Node.js inst
 1. Fork and clone this repository using `git clone`.
 
 2. Install npm packages:
+
 ```zsh
 npm install
 ```
 
 3. Create a `.env` file based off of [`.env.example`](.env.example), and provide the necessary keys.
+
 ```zsh
 DATABASE_URL='mysql://YOUR_MYSQL_URL_HERE?ssl={"rejectUnauthorized":true}'
 
@@ -42,16 +44,19 @@ CLERK_SECRET_KEY=YOUR_KEY_HERE
 ```
 
 4. Run the following command to start a local development server.
+
 ```zsh
 npm run dev
 ```
 
 5. Run the following command to open the Drizzle database studio.
+
 ```zsh
 npm run db:studio
 ```
 
 6. Run the following command to push changes to the Planetscale database schema(s).
+
 ```zsh
 npm run db:push
 ```
@@ -59,6 +64,7 @@ npm run db:push
 ### Contributing
 
 1. Create a new branch from the `develop` branch, preferably based off of an item under the "Ready" column of the [Bookclub Roadmap](https://github.com/users/nicholasdly/projects/7) Github project.
+
 ```zsh
 # New feature branch
 git checkout -b feature/<project_item_id>-<description>
@@ -68,6 +74,7 @@ git checkout -b bugfix/<project_item_id>-<description>
 ```
 
 2. Stage, commit, and push your changes.
+
 ```zsh
 git commit -m <message>
 git push origin <branch_name>

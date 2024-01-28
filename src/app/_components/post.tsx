@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { type RouterOutputs } from "~/trpc/shared";
 import { Avatar, AvatarImage } from "./shadcn-ui/avatar";
@@ -9,12 +9,15 @@ dayjs.extend(relativeTime);
 
 export default function Post(post: RouterOutputs["posts"]["getAll"][number]) {
   return (
-    <div className="bg-stone-100 border border-stone-400 rounded-md">
-      <div className="flex flex-col gap-3 m-4">
+    <div className="rounded-md border border-stone-400 bg-stone-100">
+      <div className="m-4 flex flex-col gap-3">
         <div className="flex justify-between">
-          <div className="flex gap-3 items-center">
-            <Avatar className="w-12 h-auto">
-              <AvatarImage src={post.author.imageUrl} alt={`${post.author.username}'s avatar`} />
+          <div className="flex items-center gap-3">
+            <Avatar className="h-auto w-12">
+              <AvatarImage
+                src={post.author.imageUrl}
+                alt={`${post.author.username}'s avatar`}
+              />
             </Avatar>
             <div className="flex flex-col">
               <span className="font-bold">{post.author.name}</span>

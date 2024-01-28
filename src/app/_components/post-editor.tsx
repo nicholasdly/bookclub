@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { api } from "~/trpc/react";
 import { Avatar, AvatarImage } from "./shadcn-ui/avatar";
@@ -26,7 +26,7 @@ export default function PostEditor(props: Properties) {
     element.style.height = element.scrollHeight + "px";
 
     setInput(element.value);
-  }
+  };
 
   const createPost = api.posts.create.useMutation({
     onSuccess: () => {
@@ -35,29 +35,37 @@ export default function PostEditor(props: Properties) {
     },
     onError: (error) => {
       const content = error.data?.zodError?.fieldErrors.content;
-      const description = content?.[0] ? content[0] : "Failed to create post, please try again later.";
-      toast({ variant: "destructive", title: "Something went wrong!", description });
+      const description = content?.[0]
+        ? content[0]
+        : "Failed to create post, please try again later.";
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description,
+      });
     },
   });
 
   return (
-    <div className="bg-stone-100 border border-stone-400 rounded-md">
-      <div className="flex gap-3 m-4">
-        <Avatar className="w-auto h-12">
+    <div className="rounded-md border border-stone-400 bg-stone-100">
+      <div className="m-4 flex gap-3">
+        <Avatar className="h-12 w-auto">
           <AvatarImage src={props.avatar} alt={`${props.username}'s avatar`} />
         </Avatar>
-        <div className="w-full flex flex-col gap-1">
-            <textarea
-              className="bg-stone-200 px-4 py-3 rounded-md text-lg resize-none"
-              value={input}
-              onChange={onChange}
-              placeholder="How's the book?"
-              spellCheck
-              rows={1}
-            />
-          <Separator className="my-2 bg-stone-400"/>
-          <div className="flex items-center gap-4 justify-end">
-            <span className={`text-sm ${input.trim().length > 280 ? "text-red-500" : ""}`}>
+        <div className="flex w-full flex-col gap-1">
+          <textarea
+            className="resize-none rounded-md bg-stone-200 px-4 py-3 text-lg"
+            value={input}
+            onChange={onChange}
+            placeholder="How's the book?"
+            spellCheck
+            rows={1}
+          />
+          <Separator className="my-2 bg-stone-400" />
+          <div className="flex items-center justify-end gap-4">
+            <span
+              className={`text-sm ${input.trim().length > 280 ? "text-red-500" : ""}`}
+            >
               {input.trim().length}/280
             </span>
             <Button
