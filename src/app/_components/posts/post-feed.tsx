@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { api } from "~/trpc/react";
 import Post from "./post";
@@ -9,7 +9,7 @@ export default function PostFeed() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center mt-3">
+      <div className="mt-3 flex justify-center">
         <LoadingSpinner />
       </div>
     );

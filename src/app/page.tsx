@@ -9,7 +9,12 @@ import {
   UserCircleIcon,
 } from "./_components/icons";
 import { Button } from "./_components/shadcn-ui/button";
-import { SignUpButton, SignInButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
+import {
+  SignUpButton,
+  SignInButton,
+  ClerkLoading,
+  ClerkLoaded,
+} from "@clerk/nextjs";
 import { env } from "~/env";
 import { Skeleton } from "./_components/shadcn-ui/skeleton";
 
@@ -57,7 +62,9 @@ function Header() {
             </ClerkLoading>
             <ClerkLoaded>
               <SignInButton>
-                <Button variant="outline" className="w-20">Sign in</Button>
+                <Button variant="outline" className="w-20">
+                  Sign in
+                </Button>
               </SignInButton>
               <SignUpButton>
                 <Button className="w-20">Sign up</Button>
@@ -90,7 +97,7 @@ function Hero() {
         ) : (
           <>
             <ClerkLoading>
-              <Skeleton className="mt-6 h-10 w-28"/>
+              <Skeleton className="mt-6 h-10 w-28" />
             </ClerkLoading>
             <ClerkLoaded>
               <SignUpButton>

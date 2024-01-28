@@ -70,9 +70,13 @@ export default function PostEditor(props: Properties) {
               {input.trim().length}/280
             </span>
             <Button
-              className="rounded-full text-base w-20"
+              className="w-20 rounded-full text-base"
               onClick={() => createPost({ content: input })}
-              disabled={isLoading || input.trim().length < 1 || input.trim().length > 280}
+              disabled={
+                isLoading ||
+                input.trim().length < 1 ||
+                input.trim().length > 280
+              }
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
