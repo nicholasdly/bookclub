@@ -44,7 +44,7 @@ function Header() {
             </Button>
           </div>
         </div>
-        {env.NODE_ENV === "production" ? (
+        {env.ENABLE_PRE_RELEASE_FEATURES === "false" ? (
           <Button variant="outline" className="pointer-events-none">
             Coming soon
           </Button>
@@ -76,7 +76,7 @@ function Hero() {
           books you&apos;ve read, interact with other readers, and build your
           bookworm community—all in one place.
         </p>
-        {env.NODE_ENV === "production" ? (
+        {env.ENABLE_PRE_RELEASE_FEATURES === "false" ? (
           <Button variant="outline" className="pointer-events-none mt-6">
             Coming soon
           </Button>
