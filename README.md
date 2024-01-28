@@ -4,8 +4,8 @@
 
 Inspired by the best parts of other social platforms such as [Goodreads](https://www.goodreads.com/) and [X](https://twitter.com/), **Bookclub** is built to be a community for readers on the internet—designed with readers in mind.
 
-Check out the current release here: [bookclub.social](https://bookclub.social/)
-Check out the development release here: [dev.bookclub.social](https://dev.bookclub.social/)
+- Check out the current release here: [bookclub.social](https://bookclub.social/)
+- Check out the development release here: [dev.bookclub.social](https://dev.bookclub.social/)
 
 ## Development
 
