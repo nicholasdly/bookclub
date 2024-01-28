@@ -1,28 +1,87 @@
-# Create T3 App
+# Bookclub - The social platform for bookworms
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+> Bookclub is a place to read, review, and talk about books with the internet. Keep track of the books you've read, interact with other readers, and build your bookworm community—all in one place.
 
-## What's next? How do I make an app with this?
+Inspired by the best parts of other social platforms such as [Goodreads](https://www.goodreads.com/) and [X](https://twitter.com/), **Bookclub** is built to be a community for readers on the internet—designed with readers in mind.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Check out the current release here: [bookclub.social](https://bookclub.social/)
+- Check out the development release here: [dev.bookclub.social](https://dev.bookclub.social/)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Development
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+At its core, **Bookclub** is built with the [T3 stack](https://create.t3.gg/) with these tools:
 
-## Learn More
+- **Web Framework**: [Next.js](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/)
+- **Backend**: [tRPC](https://trpc.io/) and [Upstash](https://upstash.com/)
+- **Database**: [Planetscale](https://planetscale.com/) and [Meilisearch](https://www.meilisearch.com/)
+- **Authentication**: [Clerk](https://clerk.com/)
+- **Deployment**: [Vercel](https://vercel.com/)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+You can view the development history via the [Bookclub Roadmap](https://github.com/users/nicholasdly/projects/7) GitHub project.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Prerequisites
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+To get started contributing to **Bookclub**, it is assumed you have Node.js installed along with necessary keys and secrets as listed in the [`.env.example`](.env.example) file.
 
-## How do I deploy this?
+### Installation
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+1. Fork and clone this repository using `git clone`.
+
+2. Install npm packages:
+
+```zsh
+npm install
+```
+
+3. Create a `.env` file based off of [`.env.example`](.env.example), and provide the necessary keys.
+
+```zsh
+DATABASE_URL='mysql://YOUR_MYSQL_URL_HERE?ssl={"rejectUnauthorized":true}'
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=YOUR_KEY_HERE
+CLERK_SECRET_KEY=YOUR_KEY_HERE
+```
+
+4. Run the following command to start a local development server.
+
+```zsh
+npm run dev
+```
+
+5. Run the following command to open the Drizzle database studio.
+
+```zsh
+npm run db:studio
+```
+
+6. Run the following command to push changes to the Planetscale database schema(s).
+
+```zsh
+npm run db:push
+```
+
+### Contributing
+
+1. Create a new branch from the `develop` branch, preferably based off of an item under the "Ready" column of the [Bookclub Roadmap](https://github.com/users/nicholasdly/projects/7) Github project.
+
+```zsh
+# New feature branch
+git checkout -b feature/<project_item_id>-<description>
+
+# New bug fix branch
+git checkout -b bugfix/<project_item_id>-<description>
+```
+
+2. Stage, commit, and push your changes.
+
+```zsh
+git commit -m <message>
+git push origin <branch_name>
+```
+
+3. Open a new pull request to merge your branch into the `develop` branch.
+
+## License
+
+Licensed under the GNU General Public License v3.0, Copyright © 2024

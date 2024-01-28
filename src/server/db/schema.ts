@@ -16,19 +16,19 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const mysqlTable = mysqlTableCreator((name) => `tldr_${name}`);
+export const mysqlTable = mysqlTableCreator((name) => `bookclub_${name}`);
 
 export const posts = mysqlTable(
   "post",
   {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    name: varchar("name", { length: 256 }),
+    id: varchar("id", { length: 12 }).primaryKey(),
+    userId: varchar("userId", { length: 100 }).notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
+    content: varchar("content", { length: 280 }).notNull(),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+  (post) => ({
+    userIdIndex: index("userId_idx").on(post.userId),
   }),
 );
