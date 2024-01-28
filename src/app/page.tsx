@@ -14,11 +14,16 @@ import {
   SignInButton,
   ClerkLoading,
   ClerkLoaded,
+  currentUser,
 } from "@clerk/nextjs";
 import { env } from "~/env";
 import { Skeleton } from "./_components/shadcn-ui/skeleton";
+import { redirect } from "next/navigation";
 
-export default function Landing() {
+export default async function Landing() {
+  const user = await currentUser();
+  if (user) redirect("/home");
+
   return (
     <>
       <Header />
@@ -61,12 +66,12 @@ function Header() {
               <Skeleton className="h-10 w-20 bg-primary" />
             </ClerkLoading>
             <ClerkLoaded>
-              <SignInButton>
+              <SignInButton afterSignInUrl="/home" afterSignUpUrl="/home">
                 <Button variant="outline" className="w-20">
                   Sign in
                 </Button>
               </SignInButton>
-              <SignUpButton>
+              <SignUpButton afterSignInUrl="/home" afterSignUpUrl="/home">
                 <Button className="w-20">Sign up</Button>
               </SignUpButton>
             </ClerkLoaded>
@@ -100,7 +105,7 @@ function Hero() {
               <Skeleton className="mt-6 h-10 w-28" />
             </ClerkLoading>
             <ClerkLoaded>
-              <SignUpButton>
+              <SignUpButton afterSignInUrl="/home" afterSignUpUrl="/home">
                 <Button variant="outline" className="mt-6 w-28">
                   Join today
                 </Button>

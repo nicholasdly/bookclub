@@ -12,7 +12,7 @@ export default function Header() {
             <span className="text-xl font-bold">Bookclub</span>
           </Link>
         </div>
-        <UserButton />
+        <UserButton afterSignOutUrl="/" />
       </nav>
     </header>
   );

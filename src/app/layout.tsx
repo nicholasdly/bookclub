@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "./_components/shadcn-ui/toaster";
+import { env } from "~/env";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,7 +25,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ClerkProvider afterSignInUrl="/home" afterSignUpUrl="/home">
+      <ClerkProvider
+        publishableKey={env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        afterSignInUrl="/home"
+        afterSignUpUrl="/home"
+      >
         <body className={`font-sans ${inter.variable}`}>
           <TRPCReactProvider cookies={cookies().toString()}>
             {children}
