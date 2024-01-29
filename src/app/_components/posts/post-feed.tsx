@@ -15,11 +15,5 @@ export default function PostFeed() {
     );
   }
 
-  return (
-    <>
-      {data?.map((post) => (
-        <Post {...post} key={post.id} />
-      ))}
-    </>
-  );
+  return <>{data?.map((post) => <Post {...post} key={post.id} />)}</>;
 }

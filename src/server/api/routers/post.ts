@@ -21,10 +21,11 @@ export const postRouter = createTRPCRouter({
       const userId = ctx.session.userId!;
 
       const { success } = await postsRatelimiter.limit(userId);
-      if (!success) throw new TRPCError({
-        code: "TOO_MANY_REQUESTS",
-        message: "You've reached your posting limit for the day!",
-      });
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "You've reached your posting limit for the day!",
+        });
 
       await ctx.db.insert(posts).values({
         id: generateNanoId(),

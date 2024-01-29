@@ -30,7 +30,8 @@ export default function PostEditor(props: Properties) {
         message = error.message;
       } else {
         const zodMessage = error.data?.zodError?.fieldErrors.content?.[0];
-        message = zodMessage ?? "Failed to create post, please try again later."
+        message =
+          zodMessage ?? "Failed to create post, please try again later.";
       }
 
       toast({
@@ -42,7 +43,9 @@ export default function PostEditor(props: Properties) {
   });
 
   useEffect(() => {
-    const textarea = document.getElementById("post-editor") as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      "post-editor",
+    ) as HTMLTextAreaElement;
     textarea.style.height = "0px";
     textarea.style.height = textarea.scrollHeight + "px";
   }, [input]);
