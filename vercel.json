@@ -1,0 +1,8 @@
+{
+    "crons": [
+      {
+        "path": "/api/antisleep",
+        "schedule": "0 10 * * 0"
+      }
+    ]
+  }

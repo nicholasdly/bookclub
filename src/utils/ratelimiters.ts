@@ -7,3 +7,10 @@ export const postsRatelimiter = new Ratelimit({
   limiter: Ratelimit.slidingWindow(100, "1 d"),
   analytics: true,
 });
+
+/** An Upstash ratelimiter meant for the antisleep CRON job, that allows 1 requests per 1 day. */
+export const antisleepRatelimiter = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(1, "1 d"),
+  analytics: true,
+});

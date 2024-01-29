@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -8,7 +9,7 @@ import {
 import { posts } from "~/server/db/schema";
 import { attachAuthors } from "~/utils/data";
 import { generateNanoId } from "~/utils/nanoid";
-import { postsRatelimiter } from "~/utils/ratelimiters";
+import { antisleepRatelimiter, postsRatelimiter } from "~/utils/ratelimiters";
 
 export const postRouter = createTRPCRouter({
   create: privateProcedure
@@ -41,5 +42,21 @@ export const postRouter = createTRPCRouter({
         limit: 25,
       })
       .then(attachAuthors);
+  }),
+
+  antisleep: publicProcedure.mutation(async ({ ctx }) => {
+    const id = "antisleep";
+
+    const { success } = await antisleepRatelimiter.limit(id);
+    if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
+    await ctx.db.transaction(async (tx) => {
+      await tx.insert(posts).values({
+        id,
+        userId: "cron-job",
+        content: "You shouldn't be seeing this!",
+      });
+      await tx.delete(posts).where(eq(posts.id, id));
+    });
   }),
 });
