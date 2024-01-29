@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -5,8 +6,9 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { posts } from "~/server/db/schema";
-import { attachAuthors } from "~/utils/helpers";
+import { attachAuthors } from "~/utils/data";
 import { generateNanoId } from "~/utils/nanoid";
+import { postsRatelimiter } from "~/utils/ratelimiters";
 
 export const postRouter = createTRPCRouter({
   create: privateProcedure
@@ -16,9 +18,17 @@ export const postRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.userId!;
+
+      const { success } = await postsRatelimiter.limit(userId);
+      if (!success) throw new TRPCError({
+        code: "TOO_MANY_REQUESTS",
+        message: "You've reached your posting limit for the day!",
+      });
+
       await ctx.db.insert(posts).values({
         id: generateNanoId(),
-        userId: ctx.session.userId!,
+        userId,
         content: input.content.trim(),
       });
     }),
