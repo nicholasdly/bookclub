@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import Post from "./post";
+import { Post } from "./posts";
 import { LoadingSpinner } from "../loading";
 
 export default function PostFeed() {
@@ -17,7 +17,7 @@ export default function PostFeed() {
 
   return (
     <>
-      {data!.map((post) => (
+      {data?.map((post) => (
         <Post {...post} key={post.id} />
       ))}
     </>
