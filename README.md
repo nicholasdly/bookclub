@@ -35,6 +35,7 @@ npm install
 ```
 
 3. Create a `.env` file based off of [`.env.example`](.env.example), and provide the necessary keys.
+
 ```zsh
 DATABASE_URL='mysql://YOUR_MYSQL_URL_HERE?ssl={"rejectUnauthorized":true}'
 
@@ -43,6 +44,7 @@ CLERK_SECRET_KEY=YOUR_KEY_HERE
 ```
 
 4. Run the following command to start a local development server.
+
 ```zsh
 npm run dev
 ```
