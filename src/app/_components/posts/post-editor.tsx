@@ -24,18 +24,28 @@ export default function PostEditor(props: Properties) {
       void utils.posts.getAll.invalidate();
     },
     onError: (error) => {
-      const content = error.data?.zodError?.fieldErrors.content;
-      const description = content?.[0] ?? "Failed to create post, please try again later.";
+      let message: string;
+
+      if (error.data?.code === "TOO_MANY_REQUESTS") {
+        message = error.message;
+      } else {
+        const zodMessage = error.data?.zodError?.fieldErrors.content?.[0];
+        message =
+          zodMessage ?? "Failed to create post, please try again later.";
+      }
+
       toast({
         variant: "destructive",
         title: "Something went wrong!",
-        description,
+        description: message,
       });
     },
   });
 
   useEffect(() => {
-    const textarea = document.getElementById("post-editor") as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      "post-editor",
+    ) as HTMLTextAreaElement;
     textarea.style.height = "0px";
     textarea.style.height = textarea.scrollHeight + "px";
   }, [input]);
