@@ -3,7 +3,6 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   privateProcedure,
-  publicProcedure,
 } from "~/server/api/trpc";
 import { posts } from "~/server/db/schema";
 import { attachAuthors } from "~/utils/data";
