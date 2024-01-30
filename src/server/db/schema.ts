@@ -19,7 +19,7 @@ import {
 export const mysqlTable = mysqlTableCreator((name) => `bookclub_${name}`);
 
 export const posts = mysqlTable(
-  "post",
+  "posts",
   {
     id: varchar("id", { length: 12 }).primaryKey(),
     userId: varchar("userId", { length: 100 }).notNull(),
