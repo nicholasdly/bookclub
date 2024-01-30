@@ -2,15 +2,20 @@ import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import { type InferSelectModel } from "drizzle-orm";
 import { type posts } from "~/server/db/schema";
-import { TextCensor, RegExpMatcher, englishDataset, englishRecommendedTransformers } from 'obscenity';
+import {
+  TextCensor,
+  RegExpMatcher,
+  englishDataset,
+  englishRecommendedTransformers,
+} from "obscenity";
 
 type Post = InferSelectModel<typeof posts>;
 
 /**
- * Given an array of `Post` entities, retrieve the data on the `User`s who made those posts, appending said data to
- * their respective `Post`, and return the results.
+ * Given an array of `Post` entities, retrieve the data on the `User`s who made those posts,
+ * appending said data to their respective `Post`, and return the results.
  * @param posts An array of `Post` entities to be sourced.
- * @returns 
+ * @returns
  */
 export async function attachAuthors(posts: Post[]) {
   const users = await clerkClient.users.getUserList({
@@ -40,8 +45,13 @@ export async function attachAuthors(posts: Post[]) {
   return results;
 }
 
-const profanityMatcher = new RegExpMatcher({ ...englishDataset.build(), ...englishRecommendedTransformers });
-const censor = new TextCensor().setStrategy((ctx) => "*".repeat(ctx.matchLength));
+const profanityMatcher = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+});
+const censor = new TextCensor().setStrategy((ctx) =>
+  "*".repeat(ctx.matchLength),
+);
 
 /**
  * Censors profanity from a given string `text` by replacing all profanity with astericks of the same lenth.
