@@ -5,7 +5,7 @@ import { Post } from "./posts";
 import { LoadingSpinner } from "../loading";
 
 export default function PostFeed() {
-  const { data, isLoading } = api.posts.getAll.useQuery();
+  const { data: posts, isLoading } = api.posts.getAll.useQuery();
 
   if (isLoading) {
     return (
@@ -15,5 +15,5 @@ export default function PostFeed() {
     );
   }
 
-  return <>{data?.map((post) => <Post {...post} key={post.id} />)}</>;
+  return <>{posts?.map((post) => <Post {...post} key={post.id} />)}</>;
 }
