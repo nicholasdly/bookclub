@@ -13,12 +13,7 @@ export function Post(post: RouterOutputs["posts"]["getAll"][number]) {
       <div className="m-4 flex flex-col gap-3">
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
-            <Avatar className="h-auto w-12">
-              <AvatarImage
-                src={post.author.imageUrl}
-                alt={`${post.author.username}'s avatar`}
-              />
-            </Avatar>
+              <Avatar className="h-12 w-12">
             <div className="flex flex-col">
               <span className="font-bold">{post.author.name}</span>
               <span className="text-sm">{dayjs(post.createdAt).fromNow()}</span>

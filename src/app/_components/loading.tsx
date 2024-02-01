@@ -31,7 +31,7 @@ export function LoadingSpinner({ size }: Properties) {
 export function LoadingPage() {
   return (
     <div className="absolute left-0 top-0 z-10 flex h-screen w-screen items-center justify-center bg-stone-100">
-      <BookclubLogoIcon className="h-auto w-16 animate-bounce text-stone-800" />
+      <BookclubLogoIcon className="h-16 w-16 animate-bounce text-stone-800" />
     </div>
   );
 }
