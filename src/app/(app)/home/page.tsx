@@ -3,8 +3,13 @@ import Header from "../../_components/header";
 import PostEditor from "../../_components/posts/post-editor";
 import PostFeed from "../../_components/posts/post-feed";
 
+export const metadata = {
+  title: "Home - Bookclub",
+};
+
 export default async function Home() {
-  const user = (await currentUser())!;
+  // this page is protected, so it can be safely assumed user is defined
+  const user = ( await currentUser() )!;
 
   return (
     <>
