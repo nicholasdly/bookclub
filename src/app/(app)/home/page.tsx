@@ -1,5 +1,4 @@
 import { currentUser } from "@clerk/nextjs";
-import Header from "../../_components/header";
 import PostEditor from "../../_components/posts/post-editor";
 import PostFeed from "../../_components/posts/post-feed";
 
@@ -12,14 +11,11 @@ export default async function Home() {
   const user = ( await currentUser() )!;
 
   return (
-    <>
-      <Header />
-      <main>
-        <div className="mx-auto my-6 flex max-w-2xl flex-col gap-2 px-4">
-          <PostEditor avatar={user.imageUrl} username={user.username!} />
-          <PostFeed />
-        </div>
-      </main>
-    </>
+    <main>
+      <div className="mx-auto my-6 flex max-w-2xl flex-col gap-2 px-4">
+        <PostEditor avatar={user.imageUrl} username={user.username!} />
+        <PostFeed />
+      </div>
+    </main>
   );
 }
