@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 export default authMiddleware({
   publicRoutes: ["/", "/api/webhooks(.*)"],
   afterAuth(auth, req) {
-    console.log(auth);
     const isLoggedIn = auth.userId != null;
 
     // Handle users who aren't authenticated
@@ -26,6 +25,7 @@ export default authMiddleware({
     // Allow users visiting public routes to access them
     return NextResponse.next();
   },
+  debug: true,
 });
 
 export const config = {
