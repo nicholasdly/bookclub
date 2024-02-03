@@ -10,7 +10,7 @@ dayjs.extend(relativeTime);
 
 export function Post(post: RouterOutputs["posts"]["getAll"][number]) {
   return (
-    <div className="rounded-md border border-stone-400 bg-stone-100 max-w-2xl">
+    <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex flex-col gap-3">
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
