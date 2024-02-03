@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   privateProcedure,
+  publicProcedure,
 } from "~/server/api/trpc";
 import { posts } from "~/server/db/schema";
 import { attachAuthors } from "~/utils/data";
@@ -30,12 +31,48 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  getAll: privateProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.posts
-      .findMany({
-        orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-        limit: 25,
-      })
-      .then(attachAuthors);
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.posts.findMany({
+      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+      limit: 25,
+    }).then(attachAuthors);
+  }),
+
+  getPosts: publicProcedure.input(z.object({
+    userId: z.string().optional(),
+  }))
+  .query(async ({ ctx, input }) => {
+    return await ctx.db.query.posts.findMany({
+      where: (posts, { and, eq, or }) => {
+        if (input.userId) {
+          return and(
+            eq(posts.userId, input.userId),
+            or( eq(posts.type, "post"), eq(posts.type, "repost") ),
+          );
+        }
+        return or( eq(posts.type, "post"), eq(posts.type, "repost") );
+      },
+      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+      limit: 25,
+    }).then(attachAuthors);
+  }),
+
+  getReplies: publicProcedure.input(z.object({
+    userId: z.string().optional(),
+  }))
+  .query(async ({ ctx, input }) => {
+    return await ctx.db.query.posts.findMany({
+      where: (posts, { and, eq }) => {
+        if (input.userId) {
+          return and(
+            eq(posts.userId, input.userId),
+            eq(posts.type, "reply"),
+          );
+        }
+        return eq(posts.type, "reply");
+      },
+      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+      limit: 25,
+    }).then(attachAuthors);
   }),
 });
