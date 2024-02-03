@@ -5,20 +5,23 @@ import { NextResponse } from "next/server";
 export default authMiddleware({
   publicRoutes: ["/", "/api/webhooks(.*)"],
   afterAuth(auth, req) {
+    console.log(auth);
+    const isLoggedIn = auth.userId != null;
+
     // Handle users who aren't authenticated
-    if (!auth.userId && !auth.isPublicRoute) {
+    if (!isLoggedIn && !auth.isPublicRoute) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
     // If the user is logged in and trying to access the landing page, redirect to their home page
-    if (auth.userId && req.nextUrl.pathname === "/") {
+    if (isLoggedIn && req.nextUrl.pathname === "/") {
       return NextResponse.redirect(new URL("/home", req.url));
     }
 
     // If the user is logged in and trying to access a protected route, allow them to access route
-    if (auth.userId && !auth.isPublicRoute) {
-      return NextResponse.next();
-    }
+    // if (isLoggedIn && !auth.isPublicRoute) {
+    //   return NextResponse.next();
+    // }
 
     // Allow users visiting public routes to access them
     return NextResponse.next();
