@@ -5,6 +5,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "./_components/shadcn-ui/toaster";
 import { env } from "~/env";
+import { TooltipProvider } from "./_components/shadcn-ui/tooltip";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,8 +33,10 @@ export default function RootLayout({
       >
         <body className={`font-sans ${inter.variable}`}>
           <TRPCReactProvider cookies={cookies().toString()}>
-            {children}
-            <Toaster />
+            <TooltipProvider>
+              {children}
+              <Toaster />
+            </TooltipProvider>
           </TRPCReactProvider>
         </body>
       </ClerkProvider>

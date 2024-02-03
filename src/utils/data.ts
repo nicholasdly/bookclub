@@ -9,6 +9,8 @@ import {
   englishRecommendedTransformers,
 } from "obscenity";
 
+export type NotUndefined<T> = T extends undefined ? never : T;
+
 type Post = InferSelectModel<typeof posts>;
 
 /**
