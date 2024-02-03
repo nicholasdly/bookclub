@@ -9,4 +9,5 @@ export default {
     uri: env.DATABASE_URL,
   },
   tablesFilter: ["tldr_*"],
+  out: "./migrations",
 } satisfies Config;
