@@ -52,7 +52,7 @@ export default function Editor(props: Properties) {
   }, [input]);
 
   return (
-    <div className="max-w-2xl rounded-md border border-stone-400 bg-stone-100">
+    <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex gap-3">
         <Link href={`/${props.username}`}>
           <Avatar className="h-12 w-12">
