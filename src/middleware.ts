@@ -7,15 +7,14 @@ import { NextResponse } from "next/server";
 export default authMiddleware({
   publicRoutes: (req) => !req.url.includes("/home"),
   afterAuth(auth, req) {
-
     // Handle users who aren't authenticated
     if (!auth.userId && !auth.isPublicRoute) {
-      return NextResponse.redirect(new URL('/', req.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     // If the user is logged in and trying to access the landing page, redirect to their home page
     if (auth.userId && req.nextUrl.pathname === "/") {
-      return NextResponse.redirect(new URL('/home', req.url));
+      return NextResponse.redirect(new URL("/home", req.url));
     }
 
     // If the user is logged in and trying to access a protected route, allow them to access route

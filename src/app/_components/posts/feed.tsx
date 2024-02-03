@@ -34,10 +34,18 @@ export default function Feed(props: FeedProps) {
   if (!data || data.length === 0) {
     return (
       <div className="mt-6 flex justify-center">
-        <span className="text-muted-foreground">There&apos;s nothing here!</span>
+        <span className="text-muted-foreground">
+          There&apos;s nothing here!
+        </span>
       </div>
     );
   }
 
-  return <>{data.map((post) => <Post key={post.id} {...post} />)}</>;
+  return (
+    <>
+      {data.map((post) => (
+        <Post key={post.id} {...post} />
+      ))}
+    </>
+  );
 }

@@ -8,7 +8,7 @@ export const metadata = {
 
 export default async function Home() {
   // this page is protected, so it can be safely assumed user is defined
-  const user = ( await currentUser() )!;
+  const user = (await currentUser())!;
 
   return (
     <main>

@@ -52,11 +52,14 @@ export default function Editor(props: Properties) {
   }, [input]);
 
   return (
-    <div className="rounded-md border border-stone-400 bg-stone-100 max-w-2xl">
+    <div className="max-w-2xl rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex gap-3">
         <Link href={`/${props.username}`}>
           <Avatar className="h-12 w-12">
-            <AvatarImage src={props.avatar} alt={`${props.username}'s avatar`} />
+            <AvatarImage
+              src={props.avatar}
+              alt={`${props.username}'s avatar`}
+            />
           </Avatar>
         </Link>
         <div className="flex w-full flex-col gap-1">

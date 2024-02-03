@@ -158,7 +158,14 @@ export function UserCircleIcon({ className }: IconProps) {
 
 export function BookOpenIcon({ className }: IconProps) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      width="32"
+      height="32"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+    >
       <path d="M224,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h64a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z" />
     </svg>
   );
@@ -166,8 +173,19 @@ export function BookOpenIcon({ className }: IconProps) {
 
 export function MobileMenuIcon({ className }: IconProps) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      width="44"
+      height="44"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M4 8l16 0" />
       <path d="M4 16l16 0" />
     </svg>
@@ -176,8 +194,19 @@ export function MobileMenuIcon({ className }: IconProps) {
 
 export function CalendarIcon({ className }: IconProps) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} width="44" height="44" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      width="44"
+      height="44"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+      stroke="currentColor"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
       <path d="M16 3v4" />
       <path d="M8 3v4" />
@@ -195,7 +224,14 @@ export function CalendarIcon({ className }: IconProps) {
 
 export function FollowersIcon({ className }: IconProps) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      width="32"
+      height="32"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+    >
       <path d="M125.18,156.94a64,64,0,1,0-82.36,0,100.23,100.23,0,0,0-39.49,32,12,12,0,0,0,19.35,14.2,76,76,0,0,1,122.64,0,12,12,0,0,0,19.36-14.2A100.33,100.33,0,0,0,125.18,156.94ZM44,108a40,40,0,1,1,40,40A40,40,0,0,1,44,108Zm206.1,97.67a12,12,0,0,1-16.78-2.57A76.31,76.31,0,0,0,172,172a12,12,0,0,1,0-24,40,40,0,1,0-14.85-77.16,12,12,0,1,1-8.92-22.28,64,64,0,0,1,65,108.38,100.23,100.23,0,0,1,39.49,32A12,12,0,0,1,250.1,205.67Z" />
     </svg>
   );
@@ -203,8 +239,19 @@ export function FollowersIcon({ className }: IconProps) {
 
 export function DeveloperIcon({ className }: IconProps) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} width="100" height="100" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      width="100"
+      height="100"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M7 8l-4 4l4 4" />
       <path d="M17 8l4 4l-4 4" />
       <path d="M14 4l-4 16" />
@@ -214,9 +261,24 @@ export function DeveloperIcon({ className }: IconProps) {
 
 export function AuthorIcon({ className }: IconProps) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" stroke-width="0" fill="currentColor" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      width="44"
+      height="44"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path
+        d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"
+        stroke-width="0"
+        fill="currentColor"
+      />
     </svg>
   );
 }

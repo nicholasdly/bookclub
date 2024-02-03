@@ -93,7 +93,7 @@ export const privateProcedure = t.procedure.use(({ ctx, next }) => {
       ...ctx,
       session: {
         ...ctx.session,
-        userId: ctx.session.userId,  // infers the "userId" as non-nullable
+        userId: ctx.session.userId, // infers the "userId" as non-nullable
       },
     },
   });

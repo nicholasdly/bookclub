@@ -1,4 +1,8 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/app/_components/shadcn-ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/app/_components/shadcn-ui/tooltip";
 import { AuthorIcon, DeveloperIcon } from "./icons";
 
 interface BadgeProps {
@@ -8,8 +12,8 @@ interface BadgeProps {
 
 export default function Badge({ size, type }: BadgeProps) {
   let icon, title;
-  
-  const dimensions = size === "sm" ? "w-4 h-4" : "w-6 h-6"
+
+  const dimensions = size === "sm" ? "w-4 h-4" : "w-6 h-6";
 
   if (type === "developer") {
     icon = <DeveloperIcon className={`${dimensions} text-indigo-500`} />;
@@ -24,6 +28,7 @@ export default function Badge({ size, type }: BadgeProps) {
   return (
     <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>{icon}</TooltipTrigger>
-      <TooltipContent>{title}</TooltipContent></Tooltip>
+      <TooltipContent>{title}</TooltipContent>
+    </Tooltip>
   );
 }

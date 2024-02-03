@@ -12,17 +12,20 @@ import { postsRatelimiter } from "~/utils/ratelimiters";
 
 export const postRouter = createTRPCRouter({
   create: privateProcedure
-    .input(z.object({
-      content: z.string().trim().min(1).max(280),
-    }))
+    .input(
+      z.object({
+        content: z.string().trim().min(1).max(280),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.userId;
 
       const { success } = await postsRatelimiter.limit(userId);
-      if (!success) throw new TRPCError({
-        code: "TOO_MANY_REQUESTS",
-        message: "You've reached your posting limit for the day!",
-      });
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "You've reached your posting limit for the day!",
+        });
 
       await ctx.db.insert(posts).values({
         id: generateNanoId(),
@@ -32,47 +35,59 @@ export const postRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.posts.findMany({
-      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-      limit: 25,
-    }).then(attachAuthors);
+    return await ctx.db.query.posts
+      .findMany({
+        orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+        limit: 25,
+      })
+      .then(attachAuthors);
   }),
 
-  getPosts: publicProcedure.input(z.object({
-    userId: z.string().optional(),
-  }))
-  .query(async ({ ctx, input }) => {
-    return await ctx.db.query.posts.findMany({
-      where: (posts, { and, eq, or }) => {
-        if (input.userId) {
-          return and(
-            eq(posts.userId, input.userId),
-            or( eq(posts.type, "post"), eq(posts.type, "repost") ),
-          );
-        }
-        return or( eq(posts.type, "post"), eq(posts.type, "repost") );
-      },
-      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-      limit: 25,
-    }).then(attachAuthors);
-  }),
+  getPosts: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.posts
+        .findMany({
+          where: (posts, { and, eq, or }) => {
+            if (input.userId) {
+              return and(
+                eq(posts.userId, input.userId),
+                or(eq(posts.type, "post"), eq(posts.type, "repost")),
+              );
+            }
+            return or(eq(posts.type, "post"), eq(posts.type, "repost"));
+          },
+          orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+          limit: 25,
+        })
+        .then(attachAuthors);
+    }),
 
-  getReplies: publicProcedure.input(z.object({
-    userId: z.string().optional(),
-  }))
-  .query(async ({ ctx, input }) => {
-    return await ctx.db.query.posts.findMany({
-      where: (posts, { and, eq }) => {
-        if (input.userId) {
-          return and(
-            eq(posts.userId, input.userId),
-            eq(posts.type, "reply"),
-          );
-        }
-        return eq(posts.type, "reply");
-      },
-      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-      limit: 25,
-    }).then(attachAuthors);
-  }),
+  getReplies: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.posts
+        .findMany({
+          where: (posts, { and, eq }) => {
+            if (input.userId) {
+              return and(
+                eq(posts.userId, input.userId),
+                eq(posts.type, "reply"),
+              );
+            }
+            return eq(posts.type, "reply");
+          },
+          orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+          limit: 25,
+        })
+        .then(attachAuthors);
+    }),
 });
