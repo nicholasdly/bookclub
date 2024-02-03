@@ -4,7 +4,7 @@ import {
   BookclubLogoIcon,
   BooksIcon,
   MessageOffIcon,
-  MoodSmileBeamIcon,
+  SmileIcon,
   PencilIcon,
   UserCircleIcon,
 } from "./_components/icons";
@@ -43,7 +43,7 @@ function Header() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center gap-16">
           <Link href="/" className="flex items-center gap-2">
-            <BookclubLogoIcon className="h-8 w-auto" />
+            <BookclubLogoIcon className="h-8 w-8" />
             <span className="text-xl font-bold">Bookclub</span>
           </Link>
           <div className="hidden lg:flex lg:gap-10">
@@ -139,7 +139,7 @@ function Features() {
         "All posts—including reviews—are all character limited. We're all about keeping things short and sweet here.",
     },
     {
-      icon: MoodSmileBeamIcon,
+      icon: SmileIcon,
       title: "Your own personal feed",
       description:
         "Stay up to date with all the people, books, and topics you decide to follow.",
@@ -179,7 +179,7 @@ function Features() {
           {features.map((feature, index) => (
             <li key={index}>
               <div className="mb-3 flex items-center gap-3">
-                <feature.icon className="h-6 w-auto text-stone-300" />
+                <feature.icon className="h-6 w-6 text-stone-300" />
                 <h3 className="text-lg text-stone-300">{feature.title}</h3>
               </div>
               <p className="px-3 text-stone-400">{feature.description}</p>
@@ -268,7 +268,7 @@ function Footer() {
         <div className="flex justify-center pb-6 pt-16 lg:py-16">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2">
-              <BookclubLogoIcon className="h-12 w-auto" />
+              <BookclubLogoIcon className="h-12 w-12" />
               <div>
                 <p className="text-lg font-semibold">Bookclub</p>
                 <p className="mt-0.5 text-sm">

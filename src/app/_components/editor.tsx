@@ -1,19 +1,20 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
-import { Button } from "../shadcn-ui/button";
-import { Separator } from "../shadcn-ui/separator";
+import { Avatar, AvatarImage } from "./shadcn-ui/avatar";
+import { Button } from "./shadcn-ui/button";
+import { Separator } from "./shadcn-ui/separator";
 import { useState, useEffect } from "react";
-import { useToast } from "../shadcn-ui/use-toast";
-import { LoadingSpinner } from "../loading";
+import { useToast } from "./shadcn-ui/use-toast";
+import { LoadingSpinner } from "./loading";
+import Link from "next/link";
 
 interface Properties {
   avatar: string;
   username: string;
 }
 
-export default function PostEditor(props: Properties) {
+export default function Editor(props: Properties) {
   const utils = api.useUtils();
   const { toast } = useToast();
   const [input, setInput] = useState("");
@@ -24,28 +25,43 @@ export default function PostEditor(props: Properties) {
       void utils.posts.getAll.invalidate();
     },
     onError: (error) => {
-      const content = error.data?.zodError?.fieldErrors.content;
-      const description = content?.[0] ?? "Failed to create post, please try again later.";
+      let message: string;
+
+      if (error.data?.code === "TOO_MANY_REQUESTS") {
+        message = error.message;
+      } else {
+        const zodMessage = error.data?.zodError?.fieldErrors.content?.[0];
+        message =
+          zodMessage ?? "Failed to create post, please try again later.";
+      }
+
       toast({
         variant: "destructive",
         title: "Something went wrong!",
-        description,
+        description: message,
       });
     },
   });
 
   useEffect(() => {
-    const textarea = document.getElementById("post-editor") as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      "post-editor",
+    ) as HTMLTextAreaElement;
     textarea.style.height = "0px";
     textarea.style.height = textarea.scrollHeight + "px";
   }, [input]);
 
   return (
-    <div className="rounded-md border border-stone-400 bg-stone-100 transition-all">
+    <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex gap-3">
-        <Avatar className="h-12 w-auto">
-          <AvatarImage src={props.avatar} alt={`${props.username}'s avatar`} />
-        </Avatar>
+        <Link href={`/${props.username}`}>
+          <Avatar className="h-12 w-12">
+            <AvatarImage
+              src={props.avatar}
+              alt={`${props.username}'s avatar`}
+            />
+          </Avatar>
+        </Link>
         <div className="flex w-full flex-col gap-1">
           <textarea
             className="resize-none rounded-md bg-stone-200 px-4 py-3 text-lg"

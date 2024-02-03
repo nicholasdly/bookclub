@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -5,8 +6,9 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { posts } from "~/server/db/schema";
-import { attachAuthors } from "~/utils/helpers";
+import { attachAuthors } from "~/utils/data";
 import { generateNanoId } from "~/utils/nanoid";
+import { postsRatelimiter } from "~/utils/ratelimiters";
 
 export const postRouter = createTRPCRouter({
   create: privateProcedure
@@ -16,14 +18,23 @@ export const postRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.userId;
+
+      const { success } = await postsRatelimiter.limit(userId);
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "You've reached your posting limit for the day!",
+        });
+
       await ctx.db.insert(posts).values({
         id: generateNanoId(),
-        userId: ctx.session.userId!,
+        userId,
         content: input.content.trim(),
       });
     }),
 
-  getAll: privateProcedure.query(async ({ ctx }) => {
+  getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.posts
       .findMany({
         orderBy: (posts, { desc }) => [desc(posts.createdAt)],
@@ -31,4 +42,52 @@ export const postRouter = createTRPCRouter({
       })
       .then(attachAuthors);
   }),
+
+  getPosts: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.posts
+        .findMany({
+          where: (posts, { and, eq, or }) => {
+            if (input.userId) {
+              return and(
+                eq(posts.userId, input.userId),
+                or(eq(posts.type, "post"), eq(posts.type, "repost")),
+              );
+            }
+            return or(eq(posts.type, "post"), eq(posts.type, "repost"));
+          },
+          orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+          limit: 25,
+        })
+        .then(attachAuthors);
+    }),
+
+  getReplies: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.posts
+        .findMany({
+          where: (posts, { and, eq }) => {
+            if (input.userId) {
+              return and(
+                eq(posts.userId, input.userId),
+                eq(posts.type, "reply"),
+              );
+            }
+            return eq(posts.type, "reply");
+          },
+          orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+          limit: 25,
+        })
+        .then(attachAuthors);
+    }),
 });
