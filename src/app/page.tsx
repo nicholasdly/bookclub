@@ -4,7 +4,7 @@ import {
   BookclubLogoIcon,
   BooksIcon,
   MessageOffIcon,
-  MoodSmileBeamIcon,
+  SmileIcon,
   PencilIcon,
   UserCircleIcon,
 } from "./_components/icons";
@@ -139,7 +139,7 @@ function Features() {
         "All posts—including reviews—are all character limited. We're all about keeping things short and sweet here.",
     },
     {
-      icon: MoodSmileBeamIcon,
+      icon: SmileIcon,
       title: "Your own personal feed",
       description:
         "Stay up to date with all the people, books, and topics you decide to follow.",
