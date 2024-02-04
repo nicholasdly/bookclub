@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { type WebhookEvent } from "@clerk/nextjs/server";
 import { env } from "~/env";
 import { db } from "~/server/db";
-import { users } from "~/server/db/schema";
+import { posts, users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 
 /**
@@ -15,6 +15,7 @@ import { eq } from "drizzle-orm";
  * @returns `Response`
  */
 export async function POST(req: Request) {
+
   // Get the headers
   const headerPayload = headers();
   const svix_id = headerPayload.get("svix-id");
@@ -93,7 +94,8 @@ export async function POST(req: Request) {
           imageUrl: user.image_url,
         });
       } catch (err) {
-        return new Response("Failed to insert new user into database", {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        return new Response(`Failed to insert new user into database: ${err}`, {
           status: 500,
         });
       }
@@ -137,7 +139,6 @@ export async function POST(req: Request) {
         await db
           .update(users)
           .set({
-            id: user.id,
             username: user.username,
             email: user.email_addresses[0].email_address,
             firstName: user.first_name,
@@ -146,7 +147,8 @@ export async function POST(req: Request) {
           })
           .where(eq(users.id, user.id));
       } catch (err) {
-        return new Response("Failed to update user in database", {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        return new Response(`Failed to update user in database: ${err}`, {
           status: 500,
         });
       }
@@ -160,17 +162,22 @@ export async function POST(req: Request) {
     case "user.deleted": {
       const user = evt.data;
 
-      if (!user.id) {
-        return new Response(
-          "Failed to delete user from database; nonexistent or invalid id",
-          { status: 500 },
-        );
-      }
-
       try {
-        await db.delete(users).where(eq(users.id, user.id));
+        await db.transaction(async (tx) => {
+
+          if (user.id == null) {
+            return new Response(
+              "Failed to delete user from database; nonexistent or invalid id",
+              { status: 500 },
+            );
+          }
+
+          await tx.delete(users).where(eq(users.id, user.id));
+          await tx.delete(posts).where(eq(posts.userId, user.id));
+        });
       } catch (err) {
-        return new Response("Failed to delete user from database", {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        return new Response(`Failed to delete user from database: ${err}`, {
           status: 500,
         });
       }
