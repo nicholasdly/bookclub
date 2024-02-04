@@ -2,10 +2,9 @@
 
 > Bookclub is a place to read, review, and talk about books with the internet. Keep track of the books you've read, interact with other readers, and build your bookworm community—all in one place.
 
-Inspired by the best parts of other social platforms such as [Goodreads](https://www.goodreads.com/) and [X](https://twitter.com/), **Bookclub** is built to be a community for readers on the internet—designed with readers in mind.
+Inspired by the best parts of other social platforms such as [Goodreads](https://www.goodreads.com/) and [X](https://twitter.com/), **Bookclub** is built to be a community for readers on the internet.
 
 - Check out the current release here: [bookclub.social](https://bookclub.social/)
-- Check out the development release here: [dev.bookclub.social](https://dev.bookclub.social/)
 
 ## Development
 
@@ -36,29 +35,22 @@ npm install
 
 3. Create a `.env` file based off of [`.env.example`](.env.example), and provide the necessary keys.
 
-```zsh
-DATABASE_URL='mysql://YOUR_MYSQL_URL_HERE?ssl={"rejectUnauthorized":true}'
+4. Run the following command to push changes to your Planetscale database.
 
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=YOUR_KEY_HERE
-CLERK_SECRET_KEY=YOUR_KEY_HERE
+```zsh
+npm run db:push
 ```
 
-4. Run the following command to start a local development server.
+5. Run the following command to start a local development server.
 
 ```zsh
 npm run dev
 ```
 
-5. Run the following command to open the Drizzle database studio.
+6. Run the following command to open the Drizzle database studio to easy view and modify data in your database:
 
 ```zsh
 npm run db:studio
-```
-
-6. Run the following command to push changes to the Planetscale database schema(s).
-
-```zsh
-npm run db:push
 ```
 
 ### Contributing
@@ -71,16 +63,56 @@ git checkout -b feature/<project_item_id>-<description>
 
 # New bug fix branch
 git checkout -b bugfix/<project_item_id>-<description>
+
+# New bug hotfix branch
+git checkout -b hotfix/<description>
 ```
 
-2. Stage, commit, and push your changes.
+2. Stage and commit your changes.
 
 ```zsh
+git add .
 git commit -m <message>
 git push origin <branch_name>
 ```
 
-3. Open a new pull request to merge your branch into the `develop` branch.
+3. Run the Prettier formatting script, and resolve any major issues caught by the linter. Commit those changes as well.
+
+```zsh
+npm run lint  # Alerts you of issues, but does not fix them for you!
+npm run format  # Applies Prettier formatting to the entire repo.
+git commit -m "Prettier formatting + lint fixes"
+```
+
+4. Push your changes, and make your pull request on GitHub to merge your branch into the `develop` branch (or `main` if it is a hotfix).
+
+```zsh
+git push origin <branch_name>
+```
+
+### Database Migrations
+
+During local development and prototyping, it is perfectly fine to use the `npm run db:push` command to apply schema changes to your database immediately.
+
+For more precise schema updates with increased safety, you should use migrations instead:
+
+1. Generate your migration file, which is a SQL file containing statements that can be applied to your database:
+
+```zsh
+npm run migrations:generate
+```
+
+2. You should see the migration file in the `migrations` directory. If at anytime you want to undo or remove a migration file, that can be done with the following command:
+
+```zsh
+npm run migrations:drop
+```
+
+3. To apply the changes from the migration file(s) to your database, use the following command:
+
+```zsh
+npm run migrations:push
+```
 
 ## License
 
