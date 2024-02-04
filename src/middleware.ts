@@ -25,7 +25,7 @@ export default authMiddleware({
     // Allow users visiting public routes to access them
     return NextResponse.next();
   },
-  debug: true,
+  // debug: true,
 });
 
 export const config = {
