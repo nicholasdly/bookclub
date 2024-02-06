@@ -12,20 +12,17 @@ import { postsRatelimiter } from "~/utils/ratelimiters";
 
 export const postRouter = createTRPCRouter({
   create: privateProcedure
-    .input(
-      z.object({
-        content: z.string().trim().min(1).max(280),
-      }),
-    )
+    .input(z.object({
+      content: z.string().trim().min(1).max(280),
+    }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.userId;
 
       const { success } = await postsRatelimiter.limit(userId);
-      if (!success)
-        throw new TRPCError({
-          code: "TOO_MANY_REQUESTS",
-          message: "You've reached your posting limit for the day!",
-        });
+      if (!success) throw new TRPCError({
+        code: "TOO_MANY_REQUESTS",
+        message: "You've reached your posting limit for the day!",
+      });
 
       await ctx.db.insert(posts).values({
         id: generateNanoId(),
@@ -44,11 +41,9 @@ export const postRouter = createTRPCRouter({
   }),
 
   getPosts: publicProcedure
-    .input(
-      z.object({
-        userId: z.string().optional(),
-      }),
-    )
+    .input(z.object({
+      userId: z.string().optional(),
+    }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.posts
         .findMany({

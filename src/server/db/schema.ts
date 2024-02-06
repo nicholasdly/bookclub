@@ -27,12 +27,8 @@ export const users = mysqlTable(
     firstName: varchar("firstName", { length: 50 }).notNull(),
     lastName: varchar("lastName", { length: 50 }).notNull(),
     imageUrl: varchar("imageUrl", { length: 256 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    type: mysqlEnum("type", ["user", "developer", "author"])
-      .default("user")
-      .notNull(),
+    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    type: mysqlEnum("type", ["user", "developer", "author"]).default("user").notNull(),
   },
   (user) => ({
     userIdIndex: index("userId_idx").on(user.id),
@@ -48,12 +44,8 @@ export const posts = mysqlTable(
     parentId: varchar("parentId", { length: 12 }),
     userId: varchar("userId", { length: 100 }).notNull(),
     content: varchar("content", { length: 280 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    type: mysqlEnum("type", ["post", "reply", "repost"])
-      .default("post")
-      .notNull(),
+    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    type: mysqlEnum("type", ["post", "reply", "repost"]).default("post").notNull(),
   },
   (post) => ({
     userIdIndex: index("userId_idx").on(post.userId),
