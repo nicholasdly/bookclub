@@ -1,5 +1,5 @@
 {
-  "name": "tldr",
+  "name": "bookclub",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,7 +8,7 @@
     "db:push": "drizzle-kit push:mysql",
     "db:studio": "drizzle-kit studio",
     "migrations:generate": "drizzle-kit generate:mysql",
-    "migrations:push": "drizzle-kit push:mysql",
+    "migrations:push": "tsx ./scripts/migrate.ts",
     "migrations:drop": "drizzle-kit drop",
     "dev": "next dev",
     "lint": "next lint",
@@ -36,6 +36,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
+    "dotenv": "^16.4.1",
     "drizzle-orm": "^0.29.3",
     "lucide-react": "^0.312.0",
     "nanoid": "^5.0.4",
@@ -48,6 +49,7 @@
     "svix": "^1.16.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.7.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
