@@ -8,6 +8,6 @@ export default {
   dbCredentials: {
     uri: env.DATABASE_URL,
   },
-  tablesFilter: ["tldr_*"],
+  tablesFilter: ["bookclub_*"],
   out: "./migrations",
 } satisfies Config;

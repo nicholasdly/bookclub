@@ -1,4 +1,3 @@
-// Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { relations, sql } from "drizzle-orm";
@@ -42,19 +41,6 @@ export const users = mysqlTable(
   }),
 );
 
-// export const follows = mysqlTable(
-//   "follows",
-//   {
-//     id: varchar("id", { length: 12 }).primaryKey(),
-//     followerId: varchar("id", { length: 100 }).notNull(),
-//     followingId: varchar("id", { length: 100 }).notNull(),
-//   },
-//   (follow) => ({
-//     followerIdIndex: index("followerId_idx").on(follow.followerId),
-//     followingIdIndex: index("followingId_idx").on(follow.followingId),
-//   }),
-// )
-
 export const posts = mysqlTable(
   "posts",
   {
@@ -76,32 +62,71 @@ export const posts = mysqlTable(
   }),
 );
 
-// export const likes = mysqlTable(
-//   "likes",
-//   {
-//     id: varchar("id", { length: 12 }).primaryKey(),
-//     userId: varchar("userId", { length: 100 }).notNull(),
-//     postId: varchar("postId", { length: 12 }).notNull(),
-//   },
-//   (like) => ({
-//     userIdIndex: index("userId_idx").on(like.userId),
-//     postIdIndex: index("postId_idx").on(like.postId),
-//   }),
-// )
+export const likes = mysqlTable(
+  "likes",
+  {
+    id: varchar("id", { length: 12 }).primaryKey(),
+    userId: varchar("userId", { length: 100 }).notNull(),
+    postId: varchar("postId", { length: 12 }).notNull(),
+  },
+  (like) => ({
+    userIdIndex: index("userId_idx").on(like.userId),
+    postIdIndex: index("postId_idx").on(like.postId),
+  }),
+);
+
+export const follows = mysqlTable(
+  "follows",
+  {
+    id: varchar("id", { length: 12 }).primaryKey(),
+    followerUserId: varchar("followerUserId", { length: 100 }).notNull(),
+    followingUserId: varchar("followingUserId", { length: 100 }).notNull(),
+  },
+  (follow) => ({
+    followerUserIdIndex: index("followerUserId_idx").on(follow.followerUserId),
+    followingUserIdIndex: index("followingUserId_idx").on(follow.followingUserId),
+  }),
+);
 
 export const usersRelations = relations(users, ({ many }) => ({
   posts: many(posts),
-  // followers: many(follows),
-  // following: many(follows),
+  likes: many(likes),
+  follower: many(follows, { relationName: "follower" }),
+  following: many(follows, { relationName: "following" }),
 }));
 
-export const postRelations = relations(posts, ({ one }) => ({
+export const postRelations = relations(posts, ({ one, many }) => ({
   user: one(users, {
     fields: [posts.userId],
     references: [users.id],
   }),
+  parent: one(posts, {
+    fields: [posts.parentId],
+    references: [posts.id],
+  }),
+  likes: many(likes),
 }));
 
-// export const postsRelations = relations(posts, ({ many }) => ({
-//   likes: many(likes),
-// }));
+export const likeRelations = relations(likes, ({ one }) => ({
+  user: one(users, {
+    fields: [likes.userId],
+    references: [users.id],
+  }),
+  post: one(posts, {
+    fields: [likes.postId],
+    references: [posts.id],
+  }),
+}));
+
+export const followRelations = relations(follows, ({ one }) => ({
+  follower: one(users, {
+    fields: [follows.followerUserId],
+    references: [users.id],
+    relationName: "follower",
+  }),
+  following: one(users, {
+    fields: [follows.followingUserId],
+    references: [users.id],
+    relationName: "following",
+  }),
+}));
