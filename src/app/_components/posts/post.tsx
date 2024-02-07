@@ -34,7 +34,9 @@ export function Post({ post, username }: Properties) {
             </div>
           </div>
           <div>
-          {username === post.author.username && <PostActions postId={post.id} />}
+            {username === post.author.username && (
+              <PostActions postId={post.id} />
+            )}
           </div>
         </div>
         <p className="m-3 hyphens-auto">{post.content}</p>

@@ -2,8 +2,22 @@
 
 import { Button } from "../shadcn-ui/button";
 import { DotsIcon } from "../icons";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../shadcn-ui/dropdown-menu";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../shadcn-ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../shadcn-ui/dropdown-menu";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../shadcn-ui/dialog";
 import { api } from "~/trpc/react";
 import { useToast } from "../shadcn-ui/use-toast";
 
@@ -26,7 +40,8 @@ export default function PostActions({ postId }: PostActionsProps) {
     },
     onError(error) {
       const zodMessage = error.data?.zodError?.fieldErrors.content?.[0];
-      const message = zodMessage ?? "Failed to delete post, please try again later.";
+      const message =
+        zodMessage ?? "Failed to delete post, please try again later.";
 
       toast({
         variant: "destructive",
@@ -34,22 +49,24 @@ export default function PostActions({ postId }: PostActionsProps) {
         description: message,
       });
     },
-  })
+  });
 
   return (
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" variant="ghost" className="w-6 h-6 rounded-full mr-1">
-            <DotsIcon className="w-6 h-6" />
+          <Button
+            size="icon"
+            variant="ghost"
+            className="mr-1 h-6 w-6 rounded-full"
+          >
+            <DotsIcon className="h-6 w-6" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-        <DialogTrigger asChild>
-          <DropdownMenuItem>
-            Delete
-          </DropdownMenuItem>
-        </DialogTrigger>
+          <DialogTrigger asChild>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DialogTrigger>
         </DropdownMenuContent>
       </DropdownMenu>
       <DialogContent>
