@@ -20,7 +20,7 @@ export const env = createEnv({
     ENABLE_PRE_RELEASE_FEATURES: z.enum(["true", "false"]).default("false"),
     CLERK_SECRET_KEY: z.string(),
     CLERK_WEBHOOK_SECRET: z.string(),
-    UPSTASH_REDIS_REST_URL: z.string(),
+    UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
   },
 
