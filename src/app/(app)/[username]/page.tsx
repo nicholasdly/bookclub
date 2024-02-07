@@ -55,7 +55,7 @@ export default async function Profile({ params: { username } }: ProfileProps) {
   );
 }
 
-function Sidebar({ profileUser, isOwner }: ProfileSectionProps) {
+function Sidebar({ profileUser }: ProfileSectionProps) {
   return (
     <section className="flex flex-col gap-4 md:max-w-64 lg:max-w-72">
       <div className="flex items-center gap-3 md:flex-col md:items-start">
