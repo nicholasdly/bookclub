@@ -5,6 +5,7 @@ import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
+import PostActions from "./post-actions";
 
 dayjs.extend(relativeTime);
 
@@ -32,7 +33,9 @@ export function Post({ post, username }: Properties) {
               <span className="text-sm">{dayjs(post.createdAt).fromNow()}</span>
             </div>
           </div>
-          <div />
+          <div>
+          {username === post.author.username && <PostActions postId={post.id} />}
+          </div>
         </div>
         <p className="m-3 hyphens-auto">{post.content}</p>
       </div>

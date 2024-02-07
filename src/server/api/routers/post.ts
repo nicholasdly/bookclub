@@ -70,4 +70,16 @@ export const postRouter = createTRPCRouter({
           limit: 25,
         }).then(attachAuthors);
     }),
+
+  delete: privateProcedure
+    .input(z.object({
+      id: z.string().length(12),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(posts).where(and(
+        eq(posts.id, input.id),
+        eq(posts.userId, ctx.session.userId),
+      ));
+    }),
+
 });
