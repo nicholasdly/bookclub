@@ -3,6 +3,7 @@
 import { api } from "~/trpc/react";
 import { Post } from "./post";
 import { LoadingSpinner } from "../loading";
+import { useUser } from "@clerk/nextjs";
 
 interface FeedProps {
   userId?: string;
@@ -12,7 +13,7 @@ interface FeedProps {
 function getPosts({ userId, type }: FeedProps) {
   switch (type) {
     case "posts":
-      return api.posts.getPosts.useQuery(userId ? { userId } : {});
+      return api.posts.getPostsAndReposts.useQuery(userId ? { userId } : {});
     case "replies":
       return api.posts.getReplies.useQuery(userId ? { userId } : {});
     default:
@@ -20,8 +21,9 @@ function getPosts({ userId, type }: FeedProps) {
   }
 }
 
-export default function Feed(props: FeedProps) {
-  const { data, isLoading } = getPosts(props);
+export default function Feed({ userId, type }: FeedProps) {
+  const { data, isLoading } = getPosts({ userId, type });
+  const { user } = useUser();
 
   if (isLoading) {
     return (
@@ -44,7 +46,7 @@ export default function Feed(props: FeedProps) {
   return (
     <>
       {data.map((post) => (
-        <Post key={post.id} {...post} />
+        <Post key={post.id} post={post} username={user?.username} />
       ))}
     </>
   );

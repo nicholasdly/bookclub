@@ -1,28 +1,28 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import { Avatar, AvatarImage } from "./shadcn-ui/avatar";
-import { Button } from "./shadcn-ui/button";
-import { Separator } from "./shadcn-ui/separator";
+import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
+import { Button } from "../shadcn-ui/button";
+import { Separator } from "../shadcn-ui/separator";
 import { useState, useEffect } from "react";
-import { useToast } from "./shadcn-ui/use-toast";
-import { LoadingSpinner } from "./loading";
+import { useToast } from "../shadcn-ui/use-toast";
+import { LoadingSpinner } from "../loading";
 import Link from "next/link";
 
-interface Properties {
+interface PostEditorProps {
   avatar: string;
   username: string;
 }
 
-export default function Editor(props: Properties) {
+export default function PostEditor(props: PostEditorProps) {
+  const [input, setInput] = useState("");
   const utils = api.useUtils();
   const { toast } = useToast();
-  const [input, setInput] = useState("");
 
   const { mutate: createPost, isLoading } = api.posts.create.useMutation({
     onSuccess: () => {
       setInput("");
-      void utils.posts.getAll.invalidate();
+      void utils.posts.invalidate();
     },
     onError: (error) => {
       let message: string;

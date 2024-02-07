@@ -5,10 +5,16 @@ import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
+import PostActions from "./post-actions";
 
 dayjs.extend(relativeTime);
 
-export function Post(post: RouterOutputs["posts"]["getAll"][number]) {
+interface Properties {
+  post: RouterOutputs["posts"]["getAll"][number];
+  username: string | null | undefined;
+}
+
+export function Post({ post, username }: Properties) {
   return (
     <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex flex-col gap-3">
@@ -27,7 +33,11 @@ export function Post(post: RouterOutputs["posts"]["getAll"][number]) {
               <span className="text-sm">{dayjs(post.createdAt).fromNow()}</span>
             </div>
           </div>
-          <div />
+          <div>
+            {username === post.author.username && (
+              <PostActions postId={post.id} />
+            )}
+          </div>
         </div>
         <p className="m-3 hyphens-auto">{post.content}</p>
       </div>
