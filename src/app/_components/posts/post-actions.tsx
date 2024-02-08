@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "../shadcn-ui/button";
 import { DotsIcon } from "../icons";
 import {
@@ -32,7 +30,6 @@ export default function PostActions({ postId }: PostActionsProps) {
   const deletePost = api.posts.delete.useMutation({
     onSuccess() {
       void utils.posts.invalidate();
-
       toast({
         variant: "default",
         description: "Successfully deleted post!",

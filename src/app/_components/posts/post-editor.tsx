@@ -8,16 +8,14 @@ import { useState, useEffect } from "react";
 import { useToast } from "../shadcn-ui/use-toast";
 import { LoadingSpinner } from "../loading";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-interface PostEditorProps {
-  avatar: string;
-  username: string;
-}
-
-export default function PostEditor(props: PostEditorProps) {
+export default function PostEditor() {
   const [input, setInput] = useState("");
+
   const utils = api.useUtils();
   const { toast } = useToast();
+  const { user } = useUser();
 
   const { mutate: createPost, isLoading } = api.posts.create.useMutation({
     onSuccess: () => {
@@ -43,6 +41,7 @@ export default function PostEditor(props: PostEditorProps) {
     },
   });
 
+  // Automatically resizes text area input
   useEffect(() => {
     const textarea = document.getElementById(
       "post-editor",
@@ -54,11 +53,11 @@ export default function PostEditor(props: PostEditorProps) {
   return (
     <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex gap-3">
-        <Link href={`/${props.username}`}>
+        <Link href={`/${user!.username}`}>
           <Avatar className="h-12 w-12">
             <AvatarImage
-              src={props.avatar}
-              alt={`${props.username}'s avatar`}
+              src={user!.imageUrl}
+              alt={`${user!.username}'s avatar`}
             />
           </Avatar>
         </Link>
