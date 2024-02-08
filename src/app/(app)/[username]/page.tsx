@@ -3,8 +3,9 @@ import dayjs from "dayjs";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Badge from "~/app/_components/badge";
+import GlobalFeed from "~/app/_components/feeds/global-feed";
+import PostFeed from "~/app/_components/feeds/post-feed";
 import { CalendarIcon, FollowersIcon } from "~/app/_components/icons";
-import Feed from "~/app/_components/posts/feed";
 import { Avatar, AvatarImage } from "~/app/_components/shadcn-ui/avatar";
 import {
   Tabs,
@@ -15,6 +16,9 @@ import {
 import { api } from "~/trpc/server";
 import { type RouterOutputs } from "~/trpc/shared";
 import { type NotUndefined } from "~/utils/data";
+
+export const runtime = "edge";
+export const preferredRegion = ["pdx1"];
 
 interface ProfileProps {
   params: { username: string };
@@ -121,17 +125,17 @@ async function PrimarySection({ profile }: ProfileSectionProps) {
         </TabsList>
         <TabsContent value="posts">
           <div className="flex flex-col gap-2">
-            <Feed userId={profile.id} type="posts" />
+            <PostFeed userId={profile.id} />
           </div>
         </TabsContent>
         <TabsContent value="replies">
           <div className="flex flex-col gap-2">
-            <Feed userId={profile.id} type="replies" />
+            {/* <Feed userId={profile.id} type="replies" /> */}
           </div>
         </TabsContent>
         <TabsContent value="likes">
           <div className="flex flex-col gap-2">
-            <Feed type="all" />
+            <GlobalFeed />
           </div>
         </TabsContent>
       </Tabs>
