@@ -1,20 +1,20 @@
-"use client";
-
 import { type RouterOutputs } from "~/trpc/shared";
 import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
 import PostActions from "./post-actions";
+import { useUser } from "@clerk/nextjs";
 
 dayjs.extend(relativeTime);
 
-interface Properties {
+interface PostProps {
   post: RouterOutputs["posts"]["getAll"][number];
-  username: string | null | undefined;
 }
 
-export function Post({ post, username }: Properties) {
+export function Post({ post }: PostProps) {
+  const { user } = useUser();
+
   return (
     <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex flex-col gap-3">
@@ -34,7 +34,7 @@ export function Post({ post, username }: Properties) {
             </div>
           </div>
           <div>
-            {username === post.author.username && (
+            {user?.username === post.author.username && (
               <PostActions postId={post.id} />
             )}
           </div>

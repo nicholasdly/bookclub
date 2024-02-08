@@ -17,13 +17,11 @@ import { type RouterOutputs } from "~/trpc/shared";
 import { type NotUndefined } from "~/utils/data";
 
 interface ProfileProps {
-  params: {
-    username: string;
-  };
+  params: { username: string };
 }
 
 interface ProfileSectionProps {
-  profileUser: NotUndefined<RouterOutputs["users"]["get"]>;
+  profile: NotUndefined<RouterOutputs["users"]["get"]>;
   isOwner: boolean;
 }
 
@@ -34,52 +32,51 @@ export async function generateMetadata({
   const title = user
     ? `${user.firstName} ${user.lastName} (@${user.username}) - Bookclub`
     : "Error 404 - Bookclub";
-
   return { title };
 }
 
 export default async function Profile({ params: { username } }: ProfileProps) {
-  const profileUser = await api.users.get.query({ username });
-  if (!profileUser) notFound();
+  const profile = await api.users.get.query({ username });
+  if (!profile) notFound();
 
   const user = await currentUser();
-  const isOwner = user != null && user.id === profileUser.id;
+  const isOwner = user?.id === profile.id;
 
   return (
     <main>
       <div className="mx-auto my-8 flex max-w-4xl flex-col gap-6 px-4 md:flex-row">
-        <Sidebar profileUser={profileUser} isOwner={isOwner} />
-        <Primary profileUser={profileUser} isOwner={isOwner} />
+        <Sidebar profile={profile} isOwner={isOwner} />
+        <PrimarySection profile={profile} isOwner={isOwner} />
       </div>
     </main>
   );
 }
 
-function Sidebar({ profileUser }: ProfileSectionProps) {
+function Sidebar({ profile }: ProfileSectionProps) {
   return (
     <section className="flex flex-col gap-4 md:max-w-64 lg:max-w-72">
       <div className="flex items-center gap-3 md:flex-col md:items-start">
         <Avatar className="h-24 w-24 border-2 border-stone-400 md:h-auto md:w-full">
           <AvatarImage
-            src={profileUser.imageUrl}
-            alt={`${profileUser.username}'s avatar`}
+            src={profile.imageUrl}
+            alt={`${profile.username}'s avatar`}
           />
         </Avatar>
         <div className="flex flex-col">
           <div className="flex items-center gap-1">
             <span className="text-2xl font-bold">
-              {profileUser.firstName} {profileUser.lastName}
+              {profile.firstName} {profile.lastName}
             </span>
-            <Badge size="lg" type={profileUser.type} />
+            <Badge size="lg" type={profile.type} />
           </div>
           <span className="text-xl text-muted-foreground">
-            @{profileUser.username}
+            @{profile.username}
           </span>
         </div>
       </div>
-      {profileUser.bio.length > 0 && (
+      {profile.bio.length > 0 && (
         <div className="flex flex-col gap-3">
-          <p>{profileUser.bio}</p>
+          <p>{profile.bio}</p>
           {/* {isOwner && (
             <Button variant="outline" size="lg" className="h-8">
               Edit profile
@@ -99,7 +96,7 @@ function Sidebar({ profileUser }: ProfileSectionProps) {
         <div className="flex items-center text-muted-foreground">
           <CalendarIcon className="mr-1.5 h-5 w-5" />
           <span className="text-sm">
-            Joined {dayjs(profileUser.createdAt).format("MMMM YYYY")}
+            Joined {dayjs(profile.createdAt).format("MMMM YYYY")}
           </span>
         </div>
       </div>
@@ -107,7 +104,7 @@ function Sidebar({ profileUser }: ProfileSectionProps) {
   );
 }
 
-async function Primary({ profileUser }: ProfileSectionProps) {
+async function PrimarySection({ profile }: ProfileSectionProps) {
   return (
     <section className="flex grow flex-col gap-4">
       <Tabs defaultValue="posts">
@@ -124,17 +121,17 @@ async function Primary({ profileUser }: ProfileSectionProps) {
         </TabsList>
         <TabsContent value="posts">
           <div className="flex flex-col gap-2">
-            <Feed userId={profileUser.id} type="posts" />
+            <Feed userId={profile.id} type="posts" />
           </div>
         </TabsContent>
         <TabsContent value="replies">
           <div className="flex flex-col gap-2">
-            <Feed userId={profileUser.id} type="replies" />
+            <Feed userId={profile.id} type="replies" />
           </div>
         </TabsContent>
         <TabsContent value="likes">
           <div className="flex flex-col gap-2">
-            <Feed type="global" />
+            <Feed type="all" />
           </div>
         </TabsContent>
       </Tabs>
