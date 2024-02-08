@@ -53,11 +53,11 @@ export default function PostEditor() {
   return (
     <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex gap-3">
-        <Link href={`/${user!.username}`}>
+        <Link href={`/${user?.username}`}>
           <Avatar className="h-12 w-12">
             <AvatarImage
-              src={user!.imageUrl}
-              alt={`${user!.username}'s avatar`}
+              src={user?.imageUrl}
+              alt={`${user?.username}'s avatar`}
             />
           </Avatar>
         </Link>
