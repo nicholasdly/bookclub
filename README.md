@@ -5,6 +5,7 @@
 Inspired by the best parts of other social platforms such as [Goodreads](https://www.goodreads.com/) and [X](https://twitter.com/), **Bookclub** is built to be a community for readers on the internet.
 
 - Check out the current release here: [bookclub.social](https://bookclub.social/)
+- Check out the GitHub project here: [Bookclub Roadmap](https://github.com/users/nicholasdly/projects/7)
 
 ## Development
 
@@ -16,8 +17,6 @@ At its core, **Bookclub** is built with the [T3 stack](https://create.t3.gg/) wi
 - **Database**: [Planetscale](https://planetscale.com/) and [Meilisearch](https://www.meilisearch.com/)
 - **Authentication**: [Clerk](https://clerk.com/)
 - **Deployment**: [Vercel](https://vercel.com/)
-
-You can view the development history via the [Bookclub Roadmap](https://github.com/users/nicholasdly/projects/7) GitHub project.
 
 ### Prerequisites
 
