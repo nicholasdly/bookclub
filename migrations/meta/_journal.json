@@ -22,6 +22,13 @@
       "when": 1707685523523,
       "tag": "0002_wealthy_squirrel_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1707689543417,
+      "tag": "0003_burly_lord_hawal",
+      "breakpoints": true
     }
   ]
 }

@@ -54,7 +54,7 @@ export const replies = mysqlTable(
   "replies",
   {
     id: varchar("id", { length: 20 }).primaryKey(),
-    parentId: varchar("parentId", { length: 20 }),
+    parentId: varchar("parentId", { length: 20 }).notNull(),
     userId: varchar("userId", { length: 100 }).notNull(),
     content: varchar("content", { length: 280 }).notNull(),
     createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
@@ -69,7 +69,7 @@ export const reposts = mysqlTable(
   "reposts",
   {
     id: varchar("id", { length: 20 }).primaryKey(),
-    parentId: varchar("parentId", { length: 20 }),
+    parentId: varchar("parentId", { length: 20 }).notNull(),
     userId: varchar("userId", { length: 100 }).notNull(),
     createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
   },
