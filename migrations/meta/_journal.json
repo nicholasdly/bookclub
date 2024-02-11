@@ -15,6 +15,13 @@
       "when": 1707244484805,
       "tag": "0001_daffy_raza",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1707685523523,
+      "tag": "0002_wealthy_squirrel_girl",
+      "breakpoints": true
     }
   ]
 }

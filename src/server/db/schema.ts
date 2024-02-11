@@ -27,7 +27,7 @@ export const users = mysqlTable(
     firstName: varchar("firstName", { length: 50 }).notNull(),
     lastName: varchar("lastName", { length: 50 }).notNull(),
     imageUrl: varchar("imageUrl", { length: 256 }).notNull(),
-    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
     type: mysqlEnum("type", ["user", "developer", "author"]).default("user").notNull(),
   },
   (user) => ({
@@ -40,63 +40,107 @@ export const users = mysqlTable(
 export const posts = mysqlTable(
   "posts",
   {
-    id: varchar("id", { length: 12 }).primaryKey(),
-    parentId: varchar("parentId", { length: 12 }),
+    id: varchar("id", { length: 20 }).primaryKey(),
     userId: varchar("userId", { length: 100 }).notNull(),
     content: varchar("content", { length: 280 }).notNull(),
-    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
-    type: mysqlEnum("type", ["post", "reply", "repost"]).default("post").notNull(),
+    createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (post) => ({
+    userIdIndex: index("userId_idx").on(post.userId),
+  }),
+);
+
+export const replies = mysqlTable(
+  "replies",
+  {
+    id: varchar("id", { length: 20 }).primaryKey(),
+    parentId: varchar("parentId", { length: 20 }),
+    userId: varchar("userId", { length: 100 }).notNull(),
+    content: varchar("content", { length: 280 }).notNull(),
+    createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
   },
   (post) => ({
     userIdIndex: index("userId_idx").on(post.userId),
     parentIdIndex: index("parentId_idx").on(post.parentId),
-    typeIndex: index("type_idx").on(post.type),
+  }),
+);
+
+export const reposts = mysqlTable(
+  "reposts",
+  {
+    id: varchar("id", { length: 20 }).primaryKey(),
+    parentId: varchar("parentId", { length: 20 }),
+    userId: varchar("userId", { length: 100 }).notNull(),
+    createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (post) => ({
+    userIdIndex: index("userId_idx").on(post.userId),
+    parentIdIndex: index("parentId_idx").on(post.parentId),
   }),
 );
 
 export const likes = mysqlTable(
   "likes",
   {
-    id: varchar("id", { length: 12 }).primaryKey(),
+    id: varchar("id", { length: 20 }).primaryKey(),
     userId: varchar("userId", { length: 100 }).notNull(),
-    postId: varchar("postId", { length: 12 }).notNull(),
+    parentId: varchar("parentId", { length: 20 }).notNull(),
   },
   (like) => ({
     userIdIndex: index("userId_idx").on(like.userId),
-    postIdIndex: index("postId_idx").on(like.postId),
+    parentIdIndex: index("parentId_idx").on(like.parentId),
   }),
 );
 
 export const follows = mysqlTable(
   "follows",
   {
-    id: varchar("id", { length: 12 }).primaryKey(),
-    followerUserId: varchar("followerUserId", { length: 100 }).notNull(),
-    followingUserId: varchar("followingUserId", { length: 100 }).notNull(),
+    id: varchar("id", { length: 20 }).primaryKey(),
+    followerId: varchar("followerId", { length: 100 }).notNull(),
+    followingId: varchar("followingId", { length: 100 }).notNull(),
   },
   (follow) => ({
-    followerUserIdIndex: index("followerUserId_idx").on(follow.followerUserId),
-    followingUserIdIndex: index("followingUserId_idx").on(follow.followingUserId),
+    followerIdIndex: index("followerId_idx").on(follow.followerId),
+    followingIdIndex: index("followingId_idx").on(follow.followingId),
   }),
 );
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(users, ({ many }) => ({
   posts: many(posts),
+  replies: many(replies),
+  reposts: many(reposts),
   likes: many(likes),
   follower: many(follows, { relationName: "follower" }),
   following: many(follows, { relationName: "following" }),
 }));
 
-export const postRelations = relations(posts, ({ one, many }) => ({
+export const postRelations = relations(posts, ({ one }) => ({
   user: one(users, {
     fields: [posts.userId],
     references: [users.id],
   }),
+}));
+
+export const replyRelations = relations(replies, ({ one }) => ({
+  user: one(users, {
+    fields: [replies.userId],
+    references: [users.id],
+  }),
   parent: one(posts, {
-    fields: [posts.parentId],
+    fields: [replies.parentId],
     references: [posts.id],
   }),
-  likes: many(likes),
+}));
+
+export const repostRelations = relations(reposts, ({ one }) => ({
+  user: one(users, {
+    fields: [reposts.userId],
+    references: [users.id],
+  }),
+  parent: one(posts, {
+    fields: [reposts.parentId],
+    references: [posts.id],
+  }),
 }));
 
 export const likeRelations = relations(likes, ({ one }) => ({
@@ -104,20 +148,16 @@ export const likeRelations = relations(likes, ({ one }) => ({
     fields: [likes.userId],
     references: [users.id],
   }),
-  post: one(posts, {
-    fields: [likes.postId],
-    references: [posts.id],
-  }),
 }));
 
 export const followRelations = relations(follows, ({ one }) => ({
   follower: one(users, {
-    fields: [follows.followerUserId],
+    fields: [follows.followerId],
     references: [users.id],
     relationName: "follower",
   }),
   following: one(users, {
-    fields: [follows.followingUserId],
+    fields: [follows.followingId],
     references: [users.id],
     relationName: "following",
   }),
