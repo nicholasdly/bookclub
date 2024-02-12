@@ -3,8 +3,7 @@ import dayjs from "dayjs";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Badge from "~/app/_components/badge";
-import GlobalFeed from "~/app/_components/feeds/global-feed";
-import PostFeed from "~/app/_components/feeds/post-feed";
+import HomeFeed from "~/app/_components/feeds/home-feed";
 import { CalendarIcon, FollowersIcon } from "~/app/_components/icons";
 import { Avatar, AvatarImage } from "~/app/_components/shadcn-ui/avatar";
 import {
@@ -14,8 +13,7 @@ import {
   TabsTrigger,
 } from "~/app/_components/shadcn-ui/tabs";
 import { api } from "~/trpc/server";
-import { type RouterOutputs } from "~/trpc/shared";
-import { type NotUndefined } from "~/utils/data";
+import { type User } from "~/utils/types";
 
 export const runtime = "edge";
 export const preferredRegion = ["pdx1"];
@@ -25,7 +23,7 @@ interface ProfileProps {
 }
 
 interface ProfileSectionProps {
-  profile: NotUndefined<RouterOutputs["users"]["get"]>;
+  profile: User;
   isOwner: boolean;
 }
 
@@ -108,7 +106,7 @@ function Sidebar({ profile }: ProfileSectionProps) {
   );
 }
 
-async function PrimarySection({ profile }: ProfileSectionProps) {
+async function PrimarySection({  }: ProfileSectionProps) {
   return (
     <section className="flex grow flex-col gap-4">
       <Tabs defaultValue="posts">
@@ -125,7 +123,7 @@ async function PrimarySection({ profile }: ProfileSectionProps) {
         </TabsList>
         <TabsContent value="posts">
           <div className="flex flex-col gap-2">
-            <PostFeed userId={profile.id} />
+            <HomeFeed />
           </div>
         </TabsContent>
         <TabsContent value="replies">
@@ -135,7 +133,7 @@ async function PrimarySection({ profile }: ProfileSectionProps) {
         </TabsContent>
         <TabsContent value="likes">
           <div className="flex flex-col gap-2">
-            <GlobalFeed />
+            <HomeFeed />
           </div>
         </TabsContent>
       </Tabs>

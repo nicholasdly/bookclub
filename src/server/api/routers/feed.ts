@@ -8,9 +8,9 @@ import { TRPCError } from "@trpc/server";
 export const feedRouter = createTRPCRouter({
 
   /**
-   * Retrieves all posts using cursor-based pagination.
+   * Retrieves recent posts, replies, and reposts using cursor-based pagination.
    */
-  getPosts: publicProcedure
+  getAll: publicProcedure
     .input(z.object({
       cursor: z.date().nullish(),
       limit: z.number().int().default(25),
@@ -22,6 +22,9 @@ export const feedRouter = createTRPCRouter({
         .from(posts)
         .orderBy(desc(posts.createdAt))
         .limit(input.limit + 1);
+
+      // TODO: Fetch recent replies
+      // TODO: Fetch recent reposts
 
       const items = input.cursor
         ? await query.where(lte(posts.createdAt, input.cursor))
@@ -62,7 +65,22 @@ export const feedRouter = createTRPCRouter({
     }),
 
   // /**
-  //  * Retrieves all reposts from a specified user using cursor-based pagination.
+  //  * Retrieves posts from a specified user using cursor-based pagination.
+  //  */
+  // getPosts: publicProcedure
+  //   .input(z.object({
+  //     userId: z.string(),
+  //     cursor: z.date().nullish(),
+  //     limit: z.number().int().default(25),
+  //   }))
+  //   .query(async ({ ctx, input }) => {
+      
+  //     // TODO
+
+  //   }),
+
+  // /**
+  //  * Retrieves reposts from a specified user using cursor-based pagination.
   //  */
   // getReposts: publicProcedure
   //   .input(z.object({
@@ -77,7 +95,7 @@ export const feedRouter = createTRPCRouter({
   //   }),
 
   // /**
-  //  * Retrieves all replies from a specific user using cursor-based pagination.
+  //  * Retrieves replies from a specific user using cursor-based pagination.
   //  */
   // getReplies: publicProcedure
   //   .input(z.object({

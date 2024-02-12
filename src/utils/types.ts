@@ -7,6 +7,7 @@ import {
   type likes,
   type follows
 } from "~/server/db/schema";
+import { type RouterOutputs } from "~/trpc/shared";
 
 //
 // Utility Types
@@ -22,6 +23,7 @@ export type NotNullish<T> = T extends (null | undefined) ? never : T;
 
 export type User = InferSelectModel<typeof users>;
 export type Post = InferSelectModel<typeof posts>;
+export type PostWithAuthor = RouterOutputs["feed"]["getAll"]["items"][number];
 export type Reply = InferSelectModel<typeof replies>;
 export type Repost = InferSelectModel<typeof reposts>;
 export type Like = InferSelectModel<typeof likes>;
