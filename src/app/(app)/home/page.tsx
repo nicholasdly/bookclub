@@ -1,6 +1,9 @@
 import HomeFeed from "~/app/_components/feeds/home-feed";
 import PostEditor from "../../_components/posts/post-editor";
 
+export const runtime = "edge";
+export const preferredRegion = ["pdx1"];
+
 export const metadata = {
   title: "Home - Bookclub",
 };
