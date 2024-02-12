@@ -1,22 +1,23 @@
-import { type RouterOutputs } from "~/trpc/shared";
 import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
 import PostActions from "./post-actions";
 import { useUser } from "@clerk/nextjs";
+import { type ForwardedRef, forwardRef } from "react";
+import { type PostWithAuthor } from "~/utils/types";
 
 dayjs.extend(relativeTime);
 
 interface PostProps {
-  post: RouterOutputs["posts"]["getAll"][number];
+  post: PostWithAuthor;
 }
 
-export function Post({ post }: PostProps) {
+export default forwardRef(function Post({ post }: PostProps, ref: ForwardedRef<HTMLDivElement>) {
   const { user } = useUser();
 
   return (
-    <div className="rounded-md border border-stone-400 bg-stone-100">
+    <div className="rounded-md border border-stone-400 bg-stone-100" ref={ref}>
       <div className="m-4 flex flex-col gap-3">
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
@@ -43,4 +44,4 @@ export function Post({ post }: PostProps) {
       </div>
     </div>
   );
-}
+});

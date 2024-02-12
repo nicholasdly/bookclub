@@ -15,7 +15,7 @@ const censor = new TextCensor().setStrategy((ctx) =>
 );
 
 /**
- * Censors profanity from a given string `text` by replacing all profanity with astericks of the same lenth.
+ * Censors profanity in a given string `text` by replacing all profanity with astericks of the same lenth.
  * @param text The text in which profanity will be censored.
  * @returns The same text, except all profanity has been replaced with asterisks.
  */
