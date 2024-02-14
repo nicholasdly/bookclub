@@ -5,12 +5,12 @@ import Link from "next/link";
 import PostActions from "./post-actions";
 import { useUser } from "@clerk/nextjs";
 import { type ForwardedRef, forwardRef } from "react";
-import { type PostWithAuthor } from "~/utils/types";
+import { type PostItem } from "~/utils/types";
 
 dayjs.extend(relativeTime);
 
 interface PostProps {
-  post: PostWithAuthor;
+  post: PostItem;
 }
 
 export default forwardRef(function Post({ post }: PostProps, ref: ForwardedRef<HTMLDivElement>) {
