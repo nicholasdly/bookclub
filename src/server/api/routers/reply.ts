@@ -38,7 +38,7 @@ export const replyRouter = createTRPCRouter({
    */
   delete: privateProcedure
     .input(z.object({
-      id: z.string().length(12),
+      id: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.userId;
