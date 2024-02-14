@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Badge from "~/app/_components/badge";
 import HomeFeed from "~/app/_components/feeds/home-feed";
+import PostFeed from "~/app/_components/feeds/post-feed";
 import { CalendarIcon, FollowersIcon } from "~/app/_components/icons";
 import { Avatar, AvatarImage } from "~/app/_components/shadcn-ui/avatar";
 import {
@@ -31,6 +32,7 @@ export async function generateMetadata({
   params: { username },
 }: ProfileProps): Promise<Metadata> {
   
+  const user = await api.users.getName.query({ username });
   const title = user
     ? `${user.firstName} ${user.lastName} (@${user.username}) - Bookclub`
     : "Error 404 - Bookclub";
@@ -39,7 +41,7 @@ export async function generateMetadata({
 }
 
 export default async function Profile({ params: { username } }: ProfileProps) {
-  const profile = await api.users.get.query({ username });
+  const profile = await api.users.getProfile.query({ username });
   if (!profile) notFound();
 
   const user = await currentUser();
@@ -107,7 +109,7 @@ function Sidebar({ profile }: ProfileSectionProps) {
   );
 }
 
-async function PrimarySection({  }: ProfileSectionProps) {
+async function PrimarySection({ profile }: ProfileSectionProps) {
   return (
     <section className="flex grow flex-col gap-4">
       <Tabs defaultValue="posts">
@@ -124,7 +126,7 @@ async function PrimarySection({  }: ProfileSectionProps) {
         </TabsList>
         <TabsContent value="posts">
           <div className="flex flex-col gap-2">
-            <HomeFeed />
+            <PostFeed userId={profile.id} />
           </div>
         </TabsContent>
         <TabsContent value="replies">
