@@ -4,7 +4,7 @@ import { posts } from "~/server/db/schema";
 import { desc, lte } from "drizzle-orm";
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
-import { getLikeCount, getReplyCount, getRepostCount } from "~/utils/data";
+import { getLikeCount, getPreview, getReplyCount, getRepostCount } from "~/utils/data";
 
 export const feedRouter = createTRPCRouter({
 
@@ -24,7 +24,6 @@ export const feedRouter = createTRPCRouter({
         .orderBy(desc(posts.createdAt))
         .limit(input.limit + 1);
 
-      // TODO: Fetch recent replies
       // TODO: Fetch recent reposts
 
       const items = input.cursor
@@ -52,10 +51,11 @@ export const feedRouter = createTRPCRouter({
           message: "Invalid post discovered due to nonexistent author.",
         });
 
-        const [replyCount, likeCount, repostCount] = await Promise.all([
-          getReplyCount(ctx, item.id),
-          getLikeCount(ctx, item.id),
-          getRepostCount(ctx, item.id),
+        const [parent, replyCount, likeCount, repostCount] = await Promise.all([
+          getPreview(item.parentId),
+          getReplyCount(item.id),
+          getLikeCount(item.id),
+          getRepostCount(item.id),
         ]);
 
         return {
@@ -65,6 +65,7 @@ export const feedRouter = createTRPCRouter({
             imageUrl: author.imageUrl,
             name: `${author.firstName} ${author.lastName}`,
           },
+          parent,
           replies: replyCount,
           likes: likeCount,
           reposts: repostCount,

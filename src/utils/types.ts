@@ -20,3 +20,4 @@ export type Like = InferSelectModel<typeof likes>;
 export type Follow = InferSelectModel<typeof follows>;
 
 export type PostItem = RouterOutputs["posts"]["get"];
+export type PreviewItem = Awaited<ReturnType<typeof getPreview>>;

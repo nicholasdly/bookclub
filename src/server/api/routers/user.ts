@@ -4,7 +4,7 @@ import { posts, users } from "~/server/db/schema";
 import { and, desc, eq, lte } from "drizzle-orm";
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
-import { getLikeCount, getReplyCount, getRepostCount } from "~/utils/data";
+import { getLikeCount, getPreview, getReplyCount, getRepostCount } from "~/utils/data";
 
 export const userRouter = createTRPCRouter({
 
@@ -29,7 +29,7 @@ export const userRouter = createTRPCRouter({
       username: z.string().trim().min(1),
     }))
     .query(async ({ ctx, input }) => {
-      const user = await ctx.db
+      const [user] = await ctx.db
         .select({
           username: users.username,
           firstName: users.firstName,
@@ -39,7 +39,7 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.username, input.username))
         .limit(1);
       
-        return user[0];
+        return user;
     }),
     
   /**
@@ -62,7 +62,8 @@ export const userRouter = createTRPCRouter({
       const items = input.cursor
         ? await query.where(and(
             eq(posts.userId, input.userId),
-            lte(posts.createdAt, input.cursor)
+            lte(posts.createdAt, input.cursor),
+            eq(posts.type, "post"),
           ))
         : await query.where(eq(posts.userId, input.userId));
 
@@ -83,10 +84,11 @@ export const userRouter = createTRPCRouter({
       // Append related information to each item.
       const results = items.map(async (item) => {
 
-        const [replyCount, likeCount, repostCount] = await Promise.all([
-          getReplyCount(ctx, item.id),
-          getLikeCount(ctx, item.id),
-          getRepostCount(ctx, item.id),
+        const [parent, replyCount, likeCount, repostCount] = await Promise.all([
+          getPreview(item.parentId),
+          getReplyCount(item.id),
+          getLikeCount(item.id),
+          getRepostCount(item.id),
         ]);
 
         return {
@@ -96,6 +98,7 @@ export const userRouter = createTRPCRouter({
             imageUrl: author.imageUrl,
             name: `${author.firstName} ${author.lastName}`,
           },
+          parent,
           replies: replyCount,
           likes: likeCount,
           reposts: repostCount,
@@ -105,19 +108,73 @@ export const userRouter = createTRPCRouter({
       return { items: await Promise.all(results), cursor };
     }),
 
-  // /**
-  //  * Retrieves replies from a specific user using cursor-based pagination.
-  //  */
-  // getReplies: publicProcedure
-  //   .input(z.object({
-  //     userId: z.string(),
-  //     cursor: z.date().nullish(),
-  //     limit: z.number().int().default(25),
-  //   }))
-  //   .query(async ({ ctx, input }) => {
+  /**
+   * Retrieves replies from a specific user using cursor-based pagination.
+   */
+  getReplies: publicProcedure
+    .input(z.object({
+      userId: z.string(),
+      cursor: z.date().nullish(),
+      limit: z.number().int().default(25),
+    }))
+    .query(async ({ ctx, input }) => {
       
-  //     // TODO
+      const query = ctx.db
+        .select()
+        .from(posts)
+        .orderBy(desc(posts.createdAt))
+        .limit(input.limit + 1);
 
-  //   }),
+      const _posts = input.cursor
+        ? await query.where(and(
+            eq(posts.userId, input.userId),
+            eq(posts.type, "reply"),
+            lte(posts.createdAt, input.cursor),
+          ))
+        : await query.where(and(
+            eq(posts.userId, input.userId),
+            eq(posts.type, "reply"),
+          ));
+
+      // Update cursor location to last post retrieved from page.
+      let cursor: typeof input.cursor = undefined;
+      if (_posts.length > input.limit) {
+        const next = _posts.pop();
+        cursor = next!.createdAt;
+      }
+      
+      const author = await clerkClient.users.getUser(input.userId);
+
+      if (!author) throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Invalid post discovered due to nonexistent author.",
+      });
+
+      // Append related information to each post.
+      const results = _posts.map(async (post) => {
+
+        const [parent, replyCount, likeCount, repostCount] = await Promise.all([
+          getPreview(post.parentId),
+          getReplyCount(post.id),
+          getLikeCount(post.id),
+          getRepostCount(post.id),
+        ]);
+
+        return {
+          ...post,
+          author: {
+            username: author.username!,
+            imageUrl: author.imageUrl,
+            name: `${author.firstName} ${author.lastName}`,
+          },
+          parent,
+          replies: replyCount,
+          likes: likeCount,
+          reposts: repostCount,
+        };
+      });
+
+      return { posts: await Promise.all(results), cursor };
+    }),
 
 });
