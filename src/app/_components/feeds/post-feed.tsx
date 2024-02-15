@@ -6,10 +6,14 @@ import { api } from "~/trpc/react";
 import { useEffect, useRef } from "react";
 import { useIntersection } from "@mantine/hooks";
 
-export default function HomeFeed() {
+interface PostFeedProps {
+  userId: string;
+}
+
+export default function PostFeed({ userId }: PostFeedProps) {
   const { data, isLoading, fetchNextPage, hasNextPage } =
-    api.feed.getAll.useInfiniteQuery(
-      {},
+    api.users.getPosts.useInfiniteQuery(
+      { userId },
       {
         getNextPageParam: (page) => page.cursor,
         refetchOnWindowFocus: false,

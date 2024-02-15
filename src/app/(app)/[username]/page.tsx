@@ -4,6 +4,8 @@ import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Badge from "~/app/_components/badge";
 import HomeFeed from "~/app/_components/feeds/home-feed";
+import PostFeed from "~/app/_components/feeds/post-feed";
+import UserReplyFeed from "~/app/_components/feeds/user-reply-feed";
 import { CalendarIcon, FollowersIcon } from "~/app/_components/icons";
 import { Avatar, AvatarImage } from "~/app/_components/shadcn-ui/avatar";
 import {
@@ -30,15 +32,16 @@ interface ProfileSectionProps {
 export async function generateMetadata({
   params: { username },
 }: ProfileProps): Promise<Metadata> {
-  const user = await api.users.get.query({ username });
+  const user = await api.users.getName.query({ username });
   const title = user
     ? `${user.firstName} ${user.lastName} (@${user.username}) - Bookclub`
     : "Error 404 - Bookclub";
+
   return { title };
 }
 
 export default async function Profile({ params: { username } }: ProfileProps) {
-  const profile = await api.users.get.query({ username });
+  const profile = await api.users.getProfile.query({ username });
   if (!profile) notFound();
 
   const user = await currentUser();
@@ -56,7 +59,7 @@ export default async function Profile({ params: { username } }: ProfileProps) {
 
 function Sidebar({ profile }: ProfileSectionProps) {
   return (
-    <section className="flex flex-col gap-4 md:max-w-64 lg:max-w-72">
+    <section className="flex flex-col gap-4 md:min-w-64">
       <div className="flex items-center gap-3 md:flex-col md:items-start">
         <Avatar className="h-24 w-24 border-2 border-stone-400 md:h-auto md:w-full">
           <AvatarImage
@@ -106,7 +109,7 @@ function Sidebar({ profile }: ProfileSectionProps) {
   );
 }
 
-async function PrimarySection({  }: ProfileSectionProps) {
+async function PrimarySection({ profile }: ProfileSectionProps) {
   return (
     <section className="flex grow flex-col gap-4">
       <Tabs defaultValue="posts">
@@ -123,12 +126,12 @@ async function PrimarySection({  }: ProfileSectionProps) {
         </TabsList>
         <TabsContent value="posts">
           <div className="flex flex-col gap-2">
-            <HomeFeed />
+            <PostFeed userId={profile.id} />
           </div>
         </TabsContent>
         <TabsContent value="replies">
           <div className="flex flex-col gap-2">
-            {/* <Feed userId={profile.id} type="replies" /> */}
+            <UserReplyFeed userId={profile.id} />
           </div>
         </TabsContent>
         <TabsContent value="likes">

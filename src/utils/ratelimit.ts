@@ -1,52 +1,29 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+type Duration = Parameters<typeof Ratelimit.slidingWindow>[1];
+
+const createRatelimiter = (tokens: number, window: Duration) => {
+  return new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(tokens, window),
+    analytics: true,
+  });
+};
+
 const posts = {
-
-  create: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(50, "1 d"),
-    analytics: true,
-  }),
-
-  delete: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(50, "1 d"),
-    analytics: true,
-  }),
-
+  create: createRatelimiter(50, "1 d"),
+  delete: createRatelimiter(50, "1 d"),
 };
 
 const replies = {
-
-  create: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(50, "1 d"),
-    analytics: true,
-  }),
-
-  delete: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(50, "1 d"),
-    analytics: true,
-  }),
-
+  create: createRatelimiter(50, "1 d"),
+  delete: createRatelimiter(50, "1 d"),
 };
 
 const reposts = {
-
-  create: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(50, "1 d"),
-    analytics: true,
-  }),
-
-  delete: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(50, "1 d"),
-    analytics: true,
-  }),
-
+  create: createRatelimiter(50, "1 d"),
+  delete: createRatelimiter(50, "1 d"),
 };
 
 const ratelimit = {

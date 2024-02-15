@@ -4,6 +4,7 @@ import { posts } from "~/server/db/schema";
 import { desc, lte } from "drizzle-orm";
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
+import { getLikeCount, getPreview, getReplyCount, getRepostCount } from "~/utils/data";
 
 export const feedRouter = createTRPCRouter({
 
@@ -23,7 +24,6 @@ export const feedRouter = createTRPCRouter({
         .orderBy(desc(posts.createdAt))
         .limit(input.limit + 1);
 
-      // TODO: Fetch recent replies
       // TODO: Fetch recent reposts
 
       const items = input.cursor
@@ -42,71 +42,37 @@ export const feedRouter = createTRPCRouter({
         limit: input.limit,
       });
     
-      // Append author information to each item.
-      const results = items.map((item) => {
+      // Append related information to each item.
+      const results = items.map(async (item) => {
         const author = authors.find((user) => user.id === item.userId);
-    
+
         if (!author) throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Invalid post discovered due to nonexistent author.",
         });
-    
+
+        const [parent, replyCount, likeCount, repostCount] = await Promise.all([
+          getPreview(item.parentId),
+          getReplyCount(item.id),
+          getLikeCount(item.id),
+          getRepostCount(item.id),
+        ]);
+
         return {
           ...item,
           author: {
-            username: author.username,
+            username: author.username!,
             imageUrl: author.imageUrl,
             name: `${author.firstName} ${author.lastName}`,
           },
+          parent,
+          replies: replyCount,
+          likes: likeCount,
+          reposts: repostCount,
         };
       });
 
-      return { items: results, cursor };
+      return { items: await Promise.all(results), cursor };
     }),
-
-  // /**
-  //  * Retrieves posts from a specified user using cursor-based pagination.
-  //  */
-  // getPosts: publicProcedure
-  //   .input(z.object({
-  //     userId: z.string(),
-  //     cursor: z.date().nullish(),
-  //     limit: z.number().int().default(25),
-  //   }))
-  //   .query(async ({ ctx, input }) => {
-      
-  //     // TODO
-
-  //   }),
-
-  // /**
-  //  * Retrieves reposts from a specified user using cursor-based pagination.
-  //  */
-  // getReposts: publicProcedure
-  //   .input(z.object({
-  //     userId: z.string(),
-  //     cursor: z.date().nullish(),
-  //     limit: z.number().int().default(25),
-  //   }))
-  //   .query(async ({ ctx, input }) => {
-      
-  //     // TODO
-
-  //   }),
-
-  // /**
-  //  * Retrieves replies from a specific user using cursor-based pagination.
-  //  */
-  // getReplies: publicProcedure
-  //   .input(z.object({
-  //     userId: z.string(),
-  //     cursor: z.date().nullish(),
-  //     limit: z.number().int().default(25),
-  //   }))
-  //   .query(async ({ ctx, input }) => {
-      
-  //     // TODO
-
-  //   }),
 
 });

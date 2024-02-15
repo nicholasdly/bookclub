@@ -5,11 +5,16 @@ import { LoadingSpinner } from "../loading";
 import { api } from "~/trpc/react";
 import { useEffect, useRef } from "react";
 import { useIntersection } from "@mantine/hooks";
+import type { NotUndefined, PostItem } from "~/utils/types";
 
-export default function HomeFeed() {
+interface PostReplyFeedProps {
+  postId: string;
+}
+
+export default function PostReplyFeed({ postId }: PostReplyFeedProps) {
   const { data, isLoading, fetchNextPage, hasNextPage } =
-    api.feed.getAll.useInfiniteQuery(
-      {},
+    api.posts.getReplies.useInfiniteQuery(
+      { postId },
       {
         getNextPageParam: (page) => page.cursor,
         refetchOnWindowFocus: false,
@@ -17,7 +22,7 @@ export default function HomeFeed() {
       },
     );
 
-  const items = data?.pages.flatMap((page) => page.items);
+  const items = data?.pages.flatMap((page) => page.posts);
 
   // Helper hook for the Intersection Observer API.
   const lastRef = useRef<HTMLElement>(null);
@@ -43,8 +48,8 @@ export default function HomeFeed() {
       {items?.map((item, index) => (
         <Post
           key={item.id}
-          post={item}
-          showParent={true}
+          post={item as NotUndefined<PostItem>}
+          showParent={false}
           ref={index === items.length - 1 ? ref : undefined}
         />
       ))}
