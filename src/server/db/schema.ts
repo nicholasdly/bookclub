@@ -41,20 +41,8 @@ export const posts = mysqlTable(
   "posts",
   {
     id: varchar("id", { length: 20 }).primaryKey(),
-    userId: varchar("userId", { length: 100 }).notNull(),
-    content: varchar("content", { length: 280 }).notNull(),
-    createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  },
-  (post) => ({
-    userIdIndex: index("userId_idx").on(post.userId),
-  }),
-);
-
-export const replies = mysqlTable(
-  "replies",
-  {
-    id: varchar("id", { length: 20 }).primaryKey(),
-    parentId: varchar("parentId", { length: 20 }).notNull(),
+    type: mysqlEnum("type", ["post", "reply"]).default("post").notNull(),
+    parentId: varchar("parentId", { length: 20 }),
     userId: varchar("userId", { length: 100 }).notNull(),
     content: varchar("content", { length: 280 }).notNull(),
     createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
@@ -107,7 +95,6 @@ export const follows = mysqlTable(
 
 export const userRelations = relations(users, ({ many }) => ({
   posts: many(posts),
-  replies: many(replies),
   reposts: many(reposts),
   likes: many(likes),
   follower: many(follows, { relationName: "follower" }),
@@ -119,15 +106,8 @@ export const postRelations = relations(posts, ({ one }) => ({
     fields: [posts.userId],
     references: [users.id],
   }),
-}));
-
-export const replyRelations = relations(replies, ({ one }) => ({
-  user: one(users, {
-    fields: [replies.userId],
-    references: [users.id],
-  }),
   parent: one(posts, {
-    fields: [replies.parentId],
+    fields: [posts.parentId],
     references: [posts.id],
   }),
 }));

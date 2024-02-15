@@ -55,8 +55,6 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   },
 });
 
-export type Context = typeof t._config.$types.ctx;
-
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
  *

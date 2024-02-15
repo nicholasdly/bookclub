@@ -2,7 +2,6 @@ import { postRouter } from "~/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "./routers/user";
 import { feedRouter } from "./routers/feed";
-import { replyRouter } from "./routers/reply";
 import { repostRouter } from "./routers/repost";
 
 /**
@@ -14,7 +13,6 @@ export const appRouter = createTRPCRouter({
   users: userRouter,
   feed: feedRouter,
   posts: postRouter,
-  replies: replyRouter,
   reposts: repostRouter,
 });
 
