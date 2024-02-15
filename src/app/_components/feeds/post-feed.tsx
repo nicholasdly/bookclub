@@ -47,6 +47,7 @@ export default function PostFeed({ userId }: PostFeedProps) {
         <Post
           key={item.id}
           post={item}
+          showParent={true}
           ref={index === items.length - 1 ? ref : undefined}
         />
       ))}

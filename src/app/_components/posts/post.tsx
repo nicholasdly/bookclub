@@ -2,27 +2,35 @@ import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
-import PostActions from "./post-actions";
+import PostControls from "./post-controls";
 import { useUser } from "@clerk/nextjs";
 import { type ForwardedRef, forwardRef } from "react";
-import { type PostItem } from "~/utils/types";
+import type { NotUndefined, PostItem } from "~/utils/types";
+import ReplyButton from "./actions/reply-button";
+import RepostButton from "./actions/repost-button";
+import LikeButton from "./actions/like-button";
+import Reply from "./reply";
 
 dayjs.extend(relativeTime);
 
 interface PostProps {
-  post: PostItem;
+  post: NotUndefined<PostItem>;
+  showParent: boolean;
 }
 
-export default forwardRef(function Post({ post }: PostProps, ref: ForwardedRef<HTMLDivElement>) {
+export default forwardRef(function Post({ post, showParent }: PostProps, ref: ForwardedRef<HTMLElement>) {
   const { user } = useUser();
 
   return (
-    <div className="rounded-md border border-stone-400 bg-stone-100" ref={ref}>
-      <div className="m-4 flex flex-col gap-3">
-        <div className="flex justify-between">
+    <article
+      className="rounded-md border border-stone-400 bg-stone-100" 
+      ref={ref}
+    >
+      <div className="mx-4 mt-4 flex flex-col">
+        <div className="flex justify-between mb-3">
           <div className="flex items-center gap-3">
-            <Link href={`/${post.author.username}`}>
-              <Avatar className="h-12 w-12">
+            <Link href={`/${post.author.username}`} className="rounded-full">
+              <Avatar className="h-12 w-12 hover:outline">
                 <AvatarImage
                   src={post.author.imageUrl}
                   alt={`${post.author.username}'s avatar`}
@@ -30,18 +38,29 @@ export default forwardRef(function Post({ post }: PostProps, ref: ForwardedRef<H
               </Avatar>
             </Link>
             <div className="flex flex-col">
-              <span className="font-bold">{post.author.name}</span>
-              <span className="text-sm">{dayjs(post.createdAt).fromNow()}</span>
+              <Link
+                href={`/${post.author.username}`}
+                className="font-bold hover:underline"
+              >
+                {post.author.name}
+              </Link>
+              <span className="text-sm text-muted-foreground">{dayjs(post.createdAt).fromNow()}</span>
             </div>
           </div>
           <div>
             {user?.username === post.author.username && (
-              <PostActions postId={post.id} />
+              <PostControls postId={post.id} />
             )}
           </div>
         </div>
-        <p className="m-3 hyphens-auto">{post.content}</p>
+        <p className="hyphens-auto mb-3">{post.content}</p>
+        {showParent && post.type === "reply" && <Reply reply={post.parent} />}
+        <div className="flex justify-evenly mb-3">
+          <ReplyButton count={post.replies} postId={post.id} />
+          <RepostButton count={post.reposts} />
+          <LikeButton count={post.likes} />
+        </div>
       </div>
-    </div>
+    </article>
   );
 });

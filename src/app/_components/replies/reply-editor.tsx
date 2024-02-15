@@ -10,14 +10,18 @@ import { LoadingSpinner } from "../loading";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
-export default function PostEditor() {
+interface ReplyEditorProps {
+  postId: string;
+}
+
+export default function ReplyEditor({ postId }: ReplyEditorProps) {
   const [input, setInput] = useState("");
 
   const utils = api.useUtils();
   const { toast } = useToast();
   const { user } = useUser();
 
-  const { mutate: createPost, isLoading } = api.posts.create.useMutation({
+  const { mutate: createReply, isLoading } = api.posts.reply.useMutation({
     onSuccess: () => {
       setInput("");
       void utils.invalidate();
@@ -44,7 +48,7 @@ export default function PostEditor() {
   // Automatically resizes text area input
   useEffect(() => {
     const textarea = document.getElementById(
-      "post-editor",
+      "reply-editor",
     ) as HTMLTextAreaElement;
     textarea.style.height = "0px";
     textarea.style.height = textarea.scrollHeight + "px";
@@ -64,9 +68,9 @@ export default function PostEditor() {
         <div className="flex w-full flex-col gap-1">
           <textarea
             className="resize-none rounded-md bg-stone-200 px-4 py-3 text-lg"
-            id="post-editor"
+            id="reply-editor"
             value={input}
-            placeholder="How's the book?"
+            placeholder="Post your reply"
             spellCheck
             rows={1}
             disabled={isLoading}
@@ -81,7 +85,7 @@ export default function PostEditor() {
             </span>
             <Button
               className="w-20 rounded-full text-base"
-              onClick={() => createPost({ content: input })}
+              onClick={() => createReply({ content: input, parentId: postId })}
               disabled={
                 isLoading ||
                 input.trim().length < 1 ||
@@ -93,7 +97,7 @@ export default function PostEditor() {
                   <LoadingSpinner size={4} />
                 </div>
               ) : (
-                "Post"
+                "Reply"
               )}
             </Button>
           </div>

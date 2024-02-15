@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "../shadcn-ui/button";
 import { DotsIcon } from "../icons";
 import {
@@ -19,17 +21,17 @@ import {
 import { api } from "~/trpc/react";
 import { useToast } from "../shadcn-ui/use-toast";
 
-interface PostActionsProps {
+interface PostControlsProps {
   postId: string;
 }
 
-export default function PostActions({ postId }: PostActionsProps) {
+export default function PostControls({ postId }: PostControlsProps) {
   const utils = api.useUtils();
   const { toast } = useToast();
 
   const deletePost = api.posts.delete.useMutation({
     onSuccess() {
-      void utils.posts.invalidate();
+      void utils.invalidate();
       toast({
         variant: "default",
         description: "Successfully deleted post!",
@@ -82,6 +84,7 @@ export default function PostActions({ postId }: PostActionsProps) {
             type="submit"
             variant="destructive"
             onClick={() => deletePost.mutate({ id: postId })}
+            disabled={deletePost.isLoading}
           >
             Delete
           </Button>
