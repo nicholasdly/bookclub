@@ -18,16 +18,19 @@ interface PostProps {
   showParent: boolean;
 }
 
-export default forwardRef(function Post({ post, showParent }: PostProps, ref: ForwardedRef<HTMLElement>) {
+export default forwardRef(function Post(
+  { post, showParent }: PostProps,
+  ref: ForwardedRef<HTMLElement>,
+) {
   const { user } = useUser();
 
   return (
     <article
-      className="rounded-md border border-stone-400 bg-stone-100" 
+      className="rounded-md border border-stone-400 bg-stone-100"
       ref={ref}
     >
       <div className="mx-4 mt-4 flex flex-col">
-        <div className="flex justify-between mb-3">
+        <div className="mb-3 flex justify-between">
           <div className="flex items-center gap-3">
             <Link href={`/${post.author.username}`} className="rounded-full">
               <Avatar className="h-12 w-12 hover:outline">
@@ -44,7 +47,9 @@ export default forwardRef(function Post({ post, showParent }: PostProps, ref: Fo
               >
                 {post.author.name}
               </Link>
-              <span className="text-sm text-muted-foreground">{dayjs(post.createdAt).fromNow()}</span>
+              <span className="text-sm text-muted-foreground">
+                {dayjs(post.createdAt).fromNow()}
+              </span>
             </div>
           </div>
           <div>
@@ -53,9 +58,9 @@ export default forwardRef(function Post({ post, showParent }: PostProps, ref: Fo
             )}
           </div>
         </div>
-        <p className="hyphens-auto mb-3">{post.content}</p>
+        <p className="mb-3 hyphens-auto">{post.content}</p>
         {showParent && post.type === "reply" && <Reply reply={post.parent} />}
-        <div className="flex justify-evenly mb-3">
+        <div className="mb-3 flex justify-evenly">
           <ReplyButton count={post.replies} postId={post.id} />
           <RepostButton count={post.reposts} />
           <LikeButton count={post.likes} />

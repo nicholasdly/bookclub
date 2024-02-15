@@ -58,16 +58,19 @@ export default async function PostPage({ params: { postId } }: PostPageProps) {
                 >
                   {post.author.name}
                 </Link>
-                <span className="text-sm text-muted-foreground">@{post.author.username}</span>
+                <span className="text-sm text-muted-foreground">
+                  @{post.author.username}
+                </span>
               </div>
             </div>
-            <p className="text-lg hyphens-auto my-4">{post.content}</p>
+            <p className="my-4 hyphens-auto text-lg">{post.content}</p>
             {post.type === "reply" && <Reply reply={post.parent} />}
-            <span className="text-sm text-muted-foreground mt-1 mb-4">
-              {dayjs(post.createdAt).format("h:mm A")} · {dayjs(post.createdAt).format("MMM D, YYYY")}
+            <span className="mb-4 mt-1 text-sm text-muted-foreground">
+              {dayjs(post.createdAt).format("h:mm A")} ·{" "}
+              {dayjs(post.createdAt).format("MMM D, YYYY")}
             </span>
-            <Separator className="bg-stone-400 mb-3" />
-            <div className="flex justify-evenly mb-3">
+            <Separator className="mb-3 bg-stone-400" />
+            <div className="mb-3 flex justify-evenly">
               <RepostButton count={post.reposts} />
               <LikeButton count={post.likes} />
             </div>

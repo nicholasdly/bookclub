@@ -32,12 +32,11 @@ interface ProfileSectionProps {
 export async function generateMetadata({
   params: { username },
 }: ProfileProps): Promise<Metadata> {
-  
   const user = await api.users.getName.query({ username });
   const title = user
     ? `${user.firstName} ${user.lastName} (@${user.username}) - Bookclub`
     : "Error 404 - Bookclub";
-    
+
   return { title };
 }
 

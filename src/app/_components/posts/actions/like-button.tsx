@@ -7,10 +7,12 @@ interface LikeButtonProps {
 export default function LikeButton({ count }: LikeButtonProps) {
   return (
     <button className="group flex items-center">
-      <div className="rounded-full transition-colors group-hover:bg-red-100 p-1">
-        <LikeIcon className="w-6 h-6 transition-colors group-hover:text-red-500" />
+      <div className="rounded-full p-1 transition-colors group-hover:bg-red-100">
+        <LikeIcon className="h-6 w-6 transition-colors group-hover:text-red-500" />
       </div>
-      <span className="transition-colors group-hover:text-red-500">{count}</span>
+      <span className="transition-colors group-hover:text-red-500">
+        {count}
+      </span>
     </button>
   );
 }
