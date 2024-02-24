@@ -1,66 +1,115 @@
-import { clerkClient } from "@clerk/nextjs";
+import { count, eq } from "drizzle-orm";
+import { likes, posts, reposts } from "~/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { type InferSelectModel } from "drizzle-orm";
-import { type posts } from "~/server/db/schema";
-import {
-  TextCensor,
-  RegExpMatcher,
-  englishDataset,
-  englishRecommendedTransformers,
-} from "obscenity";
-
-export type NotUndefined<T> = T extends undefined ? never : T;
-
-type Post = InferSelectModel<typeof posts>;
+import { clerkClient } from "@clerk/nextjs";
+import { db } from "~/server/db";
 
 /**
- * Given an array of `Post` entities, retrieve the data on the `User`s who made those posts,
- * appending said data to their respective `Post`, and return the results.
- * @param posts An array of `Post` entities to be sourced.
- * @returns
+ * Wrapper for the Clerk `getUser` method, which returns a `User` object if a
+ * user with an `id` equal to `userId` exists, otherwise throws a `TRPCError`.
+ * @param userId The `id` property of a `User`
+ * @returns Clerk `User` object
  */
-export async function attachAuthors(posts: Post[]) {
-  const users = await clerkClient.users.getUserList({
-    userId: posts.map((post) => post.userId),
-    limit: 25,
-  });
-
-  const results = posts.map((post) => {
-    const author = users.find((user) => user.id === post.userId);
-
-    if (!author)
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Invalid post discovered due to nonexistent author.",
-      });
-
-    return {
-      ...post,
-      author: {
-        username: author.username!,
-        imageUrl: author.imageUrl,
-        name: `${author.firstName} ${author.lastName}`,
-      },
-    };
-  });
-
-  return results;
+export async function getAuthor(userId: string) {
+  try {
+    return await clerkClient.users.getUser(userId);
+  } catch (error) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `There does not exist a user with id: ${userId}`,
+    });
+  }
 }
 
-const profanityMatcher = new RegExpMatcher({
-  ...englishDataset.build(),
-  ...englishRecommendedTransformers,
-});
-const censor = new TextCensor().setStrategy((ctx) =>
-  "*".repeat(ctx.matchLength),
-);
+/**
+ * Retrieves a specified post's basic information and author's basic
+ * information, otherwise returns `undefined` if a post with id equal to
+ * `postId` does not exist.
+ * @param postId The `id` property of a post
+ * @returns `Post`
+ */
+export async function getPreview(postId: string | null) {
+  if (!postId) return undefined;
+
+  const post = await db.query.posts.findFirst({
+    columns: {
+      id: true,
+      userId: true,
+      content: true,
+      createdAt: true,
+    },
+    where: (posts, { eq }) => eq(posts.id, postId),
+  });
+
+  if (!post) return undefined;
+
+  const author = await getAuthor(post.userId);
+
+  return {
+    ...post,
+    author: {
+      username: author.username!,
+      imageUrl: author.imageUrl,
+      name: `${author.firstName} ${author.lastName}`,
+    },
+  };
+}
 
 /**
- * Censors profanity from a given string `text` by replacing all profanity with astericks of the same lenth.
- * @param text The text in which profanity will be censored.
- * @returns The same text, except all profanity has been replaced with asterisks.
+ * Returns the number of likes a specified item of `id` equal to `itemId` has.
+ * @param itemId The `id` property of a post
+ * @returns `number`
  */
-export function censorProfanity(text: string) {
-  const profanity = profanityMatcher.getAllMatches(text);
-  return censor.applyTo(text, profanity);
+export async function getLikeCount(itemId: string) {
+  const [results] = await db
+    .select({ value: count() })
+    .from(likes)
+    .where(eq(likes.parentId, itemId));
+
+  if (results?.value == null) throw new TRPCError({
+    code: "INTERNAL_SERVER_ERROR",
+    message: `Failed to retrieve like count for item with id: ${itemId}`,
+  });
+
+  return results.value;
+}
+
+/**
+ * Returns the number of replies a specified item of `id` equal to `itemId`
+ * has.
+ * @param itemId The `id` property of a post
+ * @returns `number`
+ */
+export async function getReplyCount(itemId: string) {
+  const [results] = await db
+    .select({ value: count() })
+    .from(posts)
+    .where(eq(posts.parentId, itemId));
+
+  if (results?.value == null) throw new TRPCError({
+    code: "INTERNAL_SERVER_ERROR",
+    message: `Failed to retrieve reply count for item with id: ${itemId}`,
+  });
+
+  return results.value;
+}
+
+/**
+ * Returns the number of reposts a specified item of `id` equal to `itemId`
+ * has.
+ * @param itemId The `id` property of a post
+ * @returns `number`
+ */
+export async function getRepostCount(itemId: string) {
+  const [results] = await db
+    .select({ value: count() })
+    .from(reposts)
+    .where(eq(reposts.parentId, itemId));
+
+  if (results?.value == null) throw new TRPCError({
+    code: "INTERNAL_SERVER_ERROR",
+    message: `Failed to retrieve repost count for item with id: ${itemId}`,
+  });
+
+  return results.value;
 }

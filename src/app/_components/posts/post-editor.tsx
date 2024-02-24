@@ -1,28 +1,26 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import { Avatar, AvatarImage } from "./shadcn-ui/avatar";
-import { Button } from "./shadcn-ui/button";
-import { Separator } from "./shadcn-ui/separator";
+import { Avatar, AvatarImage } from "../shadcn-ui/avatar";
+import { Button } from "../shadcn-ui/button";
+import { Separator } from "../shadcn-ui/separator";
 import { useState, useEffect } from "react";
-import { useToast } from "./shadcn-ui/use-toast";
-import { LoadingSpinner } from "./loading";
+import { useToast } from "../shadcn-ui/use-toast";
+import { LoadingSpinner } from "../loading";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-interface Properties {
-  avatar: string;
-  username: string;
-}
+export default function PostEditor() {
+  const [input, setInput] = useState("");
 
-export default function Editor(props: Properties) {
   const utils = api.useUtils();
   const { toast } = useToast();
-  const [input, setInput] = useState("");
+  const { user } = useUser();
 
   const { mutate: createPost, isLoading } = api.posts.create.useMutation({
     onSuccess: () => {
       setInput("");
-      void utils.posts.getAll.invalidate();
+      void utils.invalidate();
     },
     onError: (error) => {
       let message: string;
@@ -43,6 +41,7 @@ export default function Editor(props: Properties) {
     },
   });
 
+  // Automatically resizes text area input
   useEffect(() => {
     const textarea = document.getElementById(
       "post-editor",
@@ -54,11 +53,11 @@ export default function Editor(props: Properties) {
   return (
     <div className="rounded-md border border-stone-400 bg-stone-100">
       <div className="m-4 flex gap-3">
-        <Link href={`/${props.username}`}>
-          <Avatar className="h-12 w-12">
+        <Link href={`/${user?.username}`} className="h-fit rounded-full">
+          <Avatar className="h-12 w-12 hover:outline">
             <AvatarImage
-              src={props.avatar}
-              alt={`${props.username}'s avatar`}
+              src={user?.imageUrl}
+              alt={`${user?.username}'s avatar`}
             />
           </Avatar>
         </Link>

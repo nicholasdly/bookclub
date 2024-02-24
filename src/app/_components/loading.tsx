@@ -1,10 +1,10 @@
 import { BookclubLogoIcon } from "./icons";
 
-interface Properties {
+interface LoadingSpinnerProps {
   size?: number;
 }
 
-export function LoadingSpinner({ size }: Properties) {
+export function LoadingSpinner({ size }: LoadingSpinnerProps) {
   return (
     <div role="status">
       <svg

@@ -11,6 +11,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { db } from "~/server/db";
 import { auth } from "@clerk/nextjs";
+import { type AppRouter } from "./root";
 
 /**
  * 1. CONTEXT
@@ -67,6 +68,15 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  * @see https://trpc.io/docs/router
  */
 export const createTRPCRouter = t.router;
+
+/**
+ * Helper for creating new callers for testing your tRPC API.
+ * @param router A tRPC router whose procedures you want to call.
+ * @returns A function where you can pass in a `Context` for procedure calls.
+ * 
+ * @see https://trpc.io/docs/server/server-side-calls#create-caller
+ */
+export const createCallerFactory = (router: AppRouter) => t.createCallerFactory(router);
 
 /**
  * Public (unauthenticated) procedure

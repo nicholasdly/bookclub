@@ -17,15 +17,10 @@ export default authMiddleware({
       return NextResponse.redirect(new URL("/home", req.url));
     }
 
-    // If the user is logged in and trying to access a protected route, allow them to access route
-    // if (isLoggedIn && !auth.isPublicRoute) {
-    //   return NextResponse.next();
-    // }
-
     // Allow users visiting public routes to access them
     return NextResponse.next();
   },
-  debug: true,
+  // debug: true,
 });
 
 export const config = {

@@ -3,8 +3,10 @@ import dayjs from "dayjs";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Badge from "~/app/_components/badge";
+import HomeFeed from "~/app/_components/feeds/home-feed";
+import PostFeed from "~/app/_components/feeds/post-feed";
+import UserReplyFeed from "~/app/_components/feeds/user-reply-feed";
 import { CalendarIcon, FollowersIcon } from "~/app/_components/icons";
-import Feed from "~/app/_components/posts/feed";
 import { Avatar, AvatarImage } from "~/app/_components/shadcn-ui/avatar";
 import {
   Tabs,
@@ -13,24 +15,24 @@ import {
   TabsTrigger,
 } from "~/app/_components/shadcn-ui/tabs";
 import { api } from "~/trpc/server";
-import { type RouterOutputs } from "~/trpc/shared";
-import { type NotUndefined } from "~/utils/data";
+import { type User } from "~/utils/types";
+
+export const runtime = "edge";
+export const preferredRegion = ["pdx1"];
 
 interface ProfileProps {
-  params: {
-    username: string;
-  };
+  params: { username: string };
 }
 
 interface ProfileSectionProps {
-  profileUser: NotUndefined<RouterOutputs["users"]["get"]>;
+  profile: User;
   isOwner: boolean;
 }
 
 export async function generateMetadata({
   params: { username },
 }: ProfileProps): Promise<Metadata> {
-  const user = await api.users.get.query({ username });
+  const user = await api.users.getName.query({ username });
   const title = user
     ? `${user.firstName} ${user.lastName} (@${user.username}) - Bookclub`
     : "Error 404 - Bookclub";
@@ -39,47 +41,47 @@ export async function generateMetadata({
 }
 
 export default async function Profile({ params: { username } }: ProfileProps) {
-  const profileUser = await api.users.get.query({ username });
-  if (!profileUser) notFound();
+  const profile = await api.users.getProfile.query({ username });
+  if (!profile) notFound();
 
   const user = await currentUser();
-  const isOwner = user != null && user.id === profileUser.id;
+  const isOwner = user?.id === profile.id;
 
   return (
     <main>
       <div className="mx-auto my-8 flex max-w-4xl flex-col gap-6 px-4 md:flex-row">
-        <Sidebar profileUser={profileUser} isOwner={isOwner} />
-        <Primary profileUser={profileUser} isOwner={isOwner} />
+        <Sidebar profile={profile} isOwner={isOwner} />
+        <PrimarySection profile={profile} isOwner={isOwner} />
       </div>
     </main>
   );
 }
 
-function Sidebar({ profileUser, isOwner }: ProfileSectionProps) {
+function Sidebar({ profile }: ProfileSectionProps) {
   return (
-    <section className="flex flex-col gap-4 md:max-w-64 lg:max-w-72">
+    <section className="flex flex-col gap-4 md:min-w-64">
       <div className="flex items-center gap-3 md:flex-col md:items-start">
         <Avatar className="h-24 w-24 border-2 border-stone-400 md:h-auto md:w-full">
           <AvatarImage
-            src={profileUser.imageUrl}
-            alt={`${profileUser.username}'s avatar`}
+            src={profile.imageUrl}
+            alt={`${profile.username}'s avatar`}
           />
         </Avatar>
         <div className="flex flex-col">
           <div className="flex items-center gap-1">
             <span className="text-2xl font-bold">
-              {profileUser.firstName} {profileUser.lastName}
+              {profile.firstName} {profile.lastName}
             </span>
-            <Badge size="lg" type={profileUser.type} />
+            <Badge size="lg" type={profile.type} />
           </div>
           <span className="text-xl text-muted-foreground">
-            @{profileUser.username}
+            @{profile.username}
           </span>
         </div>
       </div>
-      {profileUser.bio.length > 0 && (
+      {profile.bio.length > 0 && (
         <div className="flex flex-col gap-3">
-          <p>{profileUser.bio}</p>
+          <p>{profile.bio}</p>
           {/* {isOwner && (
             <Button variant="outline" size="lg" className="h-8">
               Edit profile
@@ -99,7 +101,7 @@ function Sidebar({ profileUser, isOwner }: ProfileSectionProps) {
         <div className="flex items-center text-muted-foreground">
           <CalendarIcon className="mr-1.5 h-5 w-5" />
           <span className="text-sm">
-            Joined {dayjs(profileUser.createdAt).format("MMMM YYYY")}
+            Joined {dayjs(profile.createdAt).format("MMMM YYYY")}
           </span>
         </div>
       </div>
@@ -107,7 +109,7 @@ function Sidebar({ profileUser, isOwner }: ProfileSectionProps) {
   );
 }
 
-async function Primary({ profileUser }: ProfileSectionProps) {
+async function PrimarySection({ profile }: ProfileSectionProps) {
   return (
     <section className="flex grow flex-col gap-4">
       <Tabs defaultValue="posts">
@@ -124,17 +126,17 @@ async function Primary({ profileUser }: ProfileSectionProps) {
         </TabsList>
         <TabsContent value="posts">
           <div className="flex flex-col gap-2">
-            <Feed userId={profileUser.id} type="posts" />
+            <PostFeed userId={profile.id} />
           </div>
         </TabsContent>
         <TabsContent value="replies">
           <div className="flex flex-col gap-2">
-            <Feed userId={profileUser.id} type="replies" />
+            <UserReplyFeed userId={profile.id} />
           </div>
         </TabsContent>
         <TabsContent value="likes">
           <div className="flex flex-col gap-2">
-            <Feed type="global" />
+            <HomeFeed />
           </div>
         </TabsContent>
       </Tabs>

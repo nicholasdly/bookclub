@@ -1,0 +1,31 @@
+name: Deployment checks
+
+on: [push, pull_request]
+
+env:
+  DATABASE_URL: "https://url.com"
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "secret"
+  CLERK_SECRET_KEY: "secret"
+  CLERK_WEBHOOK_SECRET: "secret"
+  UPSTASH_REDIS_REST_URL: "https://url.com"
+  UPSTASH_REDIS_REST_TOKEN: "secret"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      # - name: Tests
+      #   run: npm run test
