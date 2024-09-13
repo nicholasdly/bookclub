@@ -9,7 +9,9 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "format": "npx prettier . --write",
+    "db:studio": "npx drizzle-kit studio",
     "db:generate": "npx drizzle-kit generate",
+    "db:drop": "npx drizzle-kit drop",
     "db:migrate": "npx drizzle-kit migrate",
     "db:seed": "tsx ./src/server/db/seed.ts"
   },
