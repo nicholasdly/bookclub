@@ -5,7 +5,7 @@ import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { hash } from "@node-rs/argon2";
 import { hashingOptions } from "@/server/auth";
 
-import * as schema from "./schema";
+import * as schema from "../schema";
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql, { schema });
