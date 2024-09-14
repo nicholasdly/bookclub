@@ -1,4 +1,5 @@
 import { randomImage } from "@/lib/utils";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   timestamp,
@@ -6,25 +7,28 @@ import {
   text,
   primaryKey,
   integer,
+  uuid,
+  AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { AdapterAccountType } from "next-auth/adapters";
 
 export const users = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   username: text("username").unique().notNull(),
   email: text("email").unique().notNull(),
   passwordHash: text("passwordHash").notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image").$defaultFn(() => randomImage()),
+  emailVerified: timestamp("emailVerified"),
+  image: text("image")
+    .notNull()
+    .$defaultFn(() => randomImage()),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
 });
 
 export const accounts = pgTable(
   "account",
   {
-    userId: text("userId")
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: text("type").$type<AdapterAccountType>().notNull(),
@@ -49,7 +53,7 @@ export const authenticators = pgTable(
   "authenticator",
   {
     credentialID: text("credentialID").notNull().unique(),
-    userId: text("userId")
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     providerAccountId: text("providerAccountId").notNull(),
@@ -65,3 +69,116 @@ export const authenticators = pgTable(
     }),
   }),
 );
+
+export const posts = pgTable("posts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  authorId: uuid("authorId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export const likes = pgTable("likes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  postId: uuid("postId")
+    .references(() => posts.id, { onDelete: "cascade" })
+    .notNull(),
+  userId: uuid("userId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export const replies = pgTable("replies", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  postId: uuid("postId").references((): AnyPgColumn => posts.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
+  authorId: uuid("authorId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export const reposts = pgTable("reposts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  postId: uuid("postId")
+    .references(() => posts.id, { onDelete: "cascade" })
+    .notNull(),
+  userId: uuid("userId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export const bookmarks = pgTable("bookmarks", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  postId: uuid("postId")
+    .references(() => posts.id, { onDelete: "cascade" })
+    .notNull(),
+  userId: uuid("userId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export const usersRelations = relations(users, ({ many }) => ({
+  posts: many(posts),
+  likes: many(likes),
+  reposts: many(reposts),
+  bookmarks: many(bookmarks),
+}));
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+  author: one(users, {
+    fields: [posts.authorId],
+    references: [users.id],
+  }),
+  replies: many(replies),
+  likes: many(likes),
+  reposts: many(reposts),
+  bookmarks: many(bookmarks),
+}));
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  post: one(posts, {
+    fields: [likes.postId],
+    references: [posts.id],
+  }),
+  user: one(users, {
+    fields: [likes.userId],
+    references: [users.id],
+  }),
+}));
+
+export const repliesRelations = relations(replies, ({ one }) => ({
+  post: one(posts, {
+    fields: [replies.postId],
+    references: [posts.id],
+  }),
+}));
+
+export const repostsRelations = relations(reposts, ({ one }) => ({
+  post: one(posts, {
+    fields: [reposts.postId],
+    references: [posts.id],
+  }),
+  user: one(users, {
+    fields: [reposts.userId],
+    references: [users.id],
+  }),
+}));
+
+export const bookmarksRelations = relations(bookmarks, ({ one }) => ({
+  post: one(posts, {
+    fields: [bookmarks.postId],
+    references: [posts.id],
+  }),
+  user: one(users, {
+    fields: [bookmarks.userId],
+    references: [users.id],
+  }),
+}));
