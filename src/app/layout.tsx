@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   title: "Bookclub - The social network for bookworms.",
   description:
     "Your place to talk about books with the internet. Keep track of the books you've read, interact with other readers, and build your bookworm community—all in one place.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.svg" }],
 };
 
 export default function RootLayout({
