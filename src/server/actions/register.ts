@@ -7,8 +7,14 @@ import { users } from "../db/schema";
 import db from "../db";
 import { eq, or } from "drizzle-orm";
 import { hashingOptions, signIn } from "@/server/auth";
+import { headers } from "next/headers";
+import ratelimit from "@/lib/ratelimit";
 
 export async function register(body: z.infer<typeof registerFormSchema>) {
+  const ip = headers().get("x-forwarded-for") ?? "unknown";
+  const { success } = await ratelimit.auth.register.limit(ip);
+  if (!success) return { error: "Rate limit exceeded!" };
+
   const fields = registerFormSchema.safeParse(body);
 
   if (!fields.success) {

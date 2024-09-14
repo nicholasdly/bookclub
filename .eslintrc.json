@@ -1,7 +1,5 @@
 {
-  "plugins": [
-    "drizzle"
-  ],
+  "plugins": ["drizzle"],
   "extends": [
     "next/typescript",
     "next/core-web-vitals",
@@ -11,19 +9,13 @@
     "drizzle/enforce-delete-with-where": [
       "error",
       {
-        "drizzleObjectName": [
-          "db",
-          "ctx.db"
-        ]
+        "drizzleObjectName": ["db", "ctx.db"]
       }
     ],
     "drizzle/enforce-update-with-where": [
       "error",
       {
-        "drizzleObjectName": [
-          "db",
-          "ctx.db"
-        ]
+        "drizzleObjectName": ["db", "ctx.db"]
       }
     ]
   }
