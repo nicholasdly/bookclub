@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn } from "@/server/auth";
 import { loginFormSchema } from "@/lib/zod";
 import { z } from "zod";
 

@@ -2,6 +2,8 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter, Lora } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { TRPCReactProvider } from "@/trpc/react";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,7 +45,9 @@ export default function RootLayout({
           "overscroll-none font-sans antialiased",
         )}
       >
-        {children}
+        <TRPCReactProvider>
+          <SessionProvider>{children}</SessionProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

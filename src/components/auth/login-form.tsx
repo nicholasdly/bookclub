@@ -14,7 +14,7 @@ import {
 import { Input } from "../shadcn/input";
 import { Button } from "../shadcn/button";
 import { loginFormSchema } from "@/lib/zod";
-import { login } from "@/server/login";
+import { login } from "@/server/actions/login";
 import { useTransition } from "react";
 
 export default function LoginForm() {

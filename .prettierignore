@@ -1,2 +1,4 @@
 .github/*
 .vscode/*
+src/server/db/migrations/*
+src/server/api/routers/*

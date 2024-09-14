@@ -3,7 +3,7 @@ import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { hash } from "@node-rs/argon2";
-import { hashingOptions } from "@/auth";
+import { hashingOptions } from "@/server/auth";
 
 import * as schema from "./schema";
 

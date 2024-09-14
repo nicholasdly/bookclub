@@ -1,6 +1,6 @@
 import Link from "next/link";
 import LogOutButton from "./auth/logout-button";
-import { auth } from "@/auth";
+import { auth } from "@/server/auth";
 
 export default async function Header() {
   const session = await auth();

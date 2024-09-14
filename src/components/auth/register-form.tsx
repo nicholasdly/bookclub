@@ -14,7 +14,7 @@ import {
 import { Input } from "../shadcn/input";
 import { Button } from "../shadcn/button";
 import { registerFormSchema } from "@/lib/zod";
-import { register } from "@/server/register";
+import { register } from "@/server/actions/register";
 import { useTransition } from "react";
 
 export default function RegisterForm() {

@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/server/auth";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import LogOutButton from "./auth/logout-button";

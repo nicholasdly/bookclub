@@ -1,3 +1,30 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "plugins": [
+    "drizzle"
+  ],
+  "extends": [
+    "next/typescript",
+    "next/core-web-vitals",
+    "plugin:@tanstack/eslint-plugin-query/recommended"
+  ],
+  "rules": {
+    "drizzle/enforce-delete-with-where": [
+      "error",
+      {
+        "drizzleObjectName": [
+          "db",
+          "ctx.db"
+        ]
+      }
+    ],
+    "drizzle/enforce-update-with-where": [
+      "error",
+      {
+        "drizzleObjectName": [
+          "db",
+          "ctx.db"
+        ]
+      }
+    ]
+  }
 }

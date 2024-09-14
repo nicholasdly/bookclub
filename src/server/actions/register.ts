@@ -3,10 +3,10 @@
 import { hash } from "@node-rs/argon2";
 import { registerFormSchema } from "@/lib/zod";
 import { z } from "zod";
-import { users } from "./db/schema";
-import db from "./db";
+import { users } from "../db/schema";
+import db from "../db";
 import { eq, or } from "drizzle-orm";
-import { hashingOptions, signIn } from "@/auth";
+import { hashingOptions, signIn } from "@/server/auth";
 
 export async function register(body: z.infer<typeof registerFormSchema>) {
   const fields = registerFormSchema.safeParse(body);
