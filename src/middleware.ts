@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
-import authConfig from "./server/auth.config";
+import { NextResponse } from "next/server";
 
-const { auth } = NextAuth(authConfig);
+const { auth } = NextAuth({ providers: [] });
 
 const publicRoutes = ["/", "/home"];
 const authRoutes = ["/auth/login", "/auth/register"];
@@ -23,13 +23,13 @@ export default auth((req) => {
   // user is already logged in.
   if (isAuthRoute) {
     return isLoggedIn
-      ? Response.redirect(new URL("/home", nextUrl))
+      ? NextResponse.redirect(new URL("/home", nextUrl))
       : undefined;
   }
 
   // Redirect user to login page if attempting to visit unauthorized page.
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/auth/login", nextUrl));
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
 
   return undefined;
