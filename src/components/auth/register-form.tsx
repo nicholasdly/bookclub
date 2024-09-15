@@ -16,15 +16,19 @@ import { registerFormSchema } from "@/lib/zod";
 import { register } from "@/server/actions/register";
 import { useState, useTransition } from "react";
 import FormError from "./form-error";
+import { useSearchParams } from "next/navigation";
 
 export default function RegisterForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
 
+  const searchParams = useSearchParams();
+  const username = searchParams.get("username");
+
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      username: "",
+      username: username ?? "",
       password: "",
       confirmation: "",
       email: "",

@@ -1,6 +1,7 @@
 import RegisterForm from "@/components/auth/register-form";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default async function RegisterPage() {
   return (
@@ -9,7 +10,9 @@ export default async function RegisterPage() {
         <Image src="/favicon.svg" alt={"Bookclub"} fill />
       </Link>
       <h1 className="text-nowrap text-xl font-bold">Create an account</h1>
-      <RegisterForm />
+      <Suspense>
+        <RegisterForm />
+      </Suspense>
       <div className="flex gap-1 text-sm">
         <span className="text-nowrap text-muted-foreground">
           Already have an account?

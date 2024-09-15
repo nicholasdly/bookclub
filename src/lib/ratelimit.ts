@@ -28,6 +28,9 @@ const ratelimit = {
     getAll: createRatelimit(1000, "1 d"),
     create: createRatelimit(50, "1 d"),
   },
+  user: {
+    checkUsername: createRatelimit(100, "1 d"),
+  },
 };
 
 export default ratelimit;
