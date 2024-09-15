@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImageIcon, SmileIcon, VoteIcon } from "lucide-react";
 import { Session } from "next-auth";
 import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 export default function Editor({ user }: { user: Session["user"] }) {
   const [input, setInput] = useState("");
@@ -13,12 +14,20 @@ export default function Editor({ user }: { user: Session["user"] }) {
   const { mutate, isPending } = api.post.create.useMutation({
     onSuccess: () => {
       setInput("");
+      toast.success("Successfully created post!");
       utils.post.getAll.invalidate();
     },
-    onError: (error) => {
-      console.error(error);
+    onError: () => {
+      toast.error("Something went wrong! Please try again later.");
     },
   });
+
+  // Automatically resizes text area input
+  useEffect(() => {
+    const textarea = document.getElementById("editor") as HTMLTextAreaElement;
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }, [input]);
 
   return (
     <form
@@ -38,6 +47,7 @@ export default function Editor({ user }: { user: Session["user"] }) {
       <div className="flex w-full flex-col gap-3">
         <div className="flex gap-2">
           <textarea
+            id="editor"
             className="min-h-[50px] w-full resize-none rounded-3xl border px-4 py-3 outline-none"
             placeholder="How's the book?"
             disabled={isPending}
@@ -45,12 +55,7 @@ export default function Editor({ user }: { user: Session["user"] }) {
             maxLength={280}
             spellCheck
             value={input}
-            onChange={(event) => {
-              setInput(event.target.value);
-              // Automatically resizes textarea
-              event.target.style.height = "auto";
-              event.target.style.height = event.target.scrollHeight + "px";
-            }}
+            onChange={(event) => setInput(event.target.value)}
           />
         </div>
         <div className="flex items-center justify-between">
