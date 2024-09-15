@@ -124,7 +124,7 @@ export default function RegisterForm() {
           )}
         />
         {error && <FormError message={error} className="mb-2" />}
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" variant="core" disabled={isPending}>
           Sign up
         </Button>
       </form>

@@ -40,7 +40,7 @@ export default function Post(post: RouterOutputs["post"]["getAll"][number]) {
       </div>
       <p className="whitespace-pre-line">{post.content}</p>
       <div className="flex items-center justify-evenly">
-        <button className="group flex items-center">
+        <button className="group flex items-center rounded-full">
           <div className="rounded-full p-2 transition-colors group-hover:bg-blue-100">
             <ThumbsUpIcon
               className={cn(
@@ -58,7 +58,7 @@ export default function Post(post: RouterOutputs["post"]["getAll"][number]) {
             {formatNumber(0)}
           </span>
         </button>
-        <button className="group flex items-center">
+        <button className="group flex items-center rounded-full">
           <div className="rounded-full p-2 transition-colors group-hover:bg-green-100">
             <MessageCircleIcon className="size-5 transition-colors group-hover:stroke-green-500" />
           </div>
@@ -66,7 +66,7 @@ export default function Post(post: RouterOutputs["post"]["getAll"][number]) {
             {formatNumber(0)}
           </span>
         </button>
-        <button className="group flex items-center">
+        <button className="group flex items-center rounded-full">
           <div className="rounded-full p-2 transition-colors group-hover:bg-orange-100">
             <Repeat2Icon
               className={cn(
@@ -84,7 +84,7 @@ export default function Post(post: RouterOutputs["post"]["getAll"][number]) {
             {formatNumber(0)}
           </span>
         </button>
-        <button className="group flex items-center">
+        <button className="group flex items-center rounded-full">
           <div className="rounded-full p-2 transition-colors group-hover:bg-red-100">
             <BookmarkIcon
               className={cn(

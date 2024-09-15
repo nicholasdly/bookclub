@@ -6,6 +6,7 @@ import { ImageIcon, SmileIcon, VoteIcon } from "lucide-react";
 import { Session } from "next-auth";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { Button } from "./shadcn/button";
 
 export default function Editor({ user }: { user: Session["user"] }) {
   const [input, setInput] = useState("");
@@ -79,13 +80,14 @@ export default function Editor({ user }: { user: Session["user"] }) {
               <SmileIcon className="size-4" />
             </button>
           </div>
-          <button
-            className="self-end rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground"
+          <Button
+            className="self-end"
             type="submit"
-            disabled={isPending}
+            size="rounded"
+            disabled={input.trim().length === 0 || isPending}
           >
             Post
-          </button>
+          </Button>
         </div>
       </div>
     </form>

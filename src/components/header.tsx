@@ -1,6 +1,7 @@
 import Link from "next/link";
 import LogOutButton from "./auth/logout-button";
 import { auth } from "@/server/auth";
+import { Button } from "./shadcn/button";
 
 export default async function Header() {
   const session = await auth();
@@ -16,18 +17,12 @@ export default async function Header() {
           <LogOutButton />
         ) : (
           <>
-            <Link
-              href="/auth/login"
-              className="whitespace-nowrap rounded-full border px-4 py-1.5 text-sm font-semibold"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/auth/register"
-              className="whitespace-nowrap rounded-full border bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground"
-            >
-              Join Bookclub
-            </Link>
+            <Button variant="outline" size="rounded" asChild>
+              <Link href="/auth/login">Log In</Link>
+            </Button>
+            <Button variant="core" size="rounded" asChild>
+              <Link href="/auth/register">Join Bookclub</Link>
+            </Button>
           </>
         )}
       </div>

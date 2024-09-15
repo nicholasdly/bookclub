@@ -2,11 +2,13 @@
 
 import { logout } from "@/server/actions/logout";
 import { toast } from "sonner";
+import { Button } from "../shadcn/button";
 
 export default function LogOutButton() {
   return (
-    <button
-      className="whitespace-nowrap rounded-full border bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground"
+    <Button
+      variant="outline"
+      size="rounded"
       onClick={() =>
         toast.promise(logout(), {
           loading: "Signing out...",
@@ -15,6 +17,6 @@ export default function LogOutButton() {
       }
     >
       Sign out
-    </button>
+    </Button>
   );
 }

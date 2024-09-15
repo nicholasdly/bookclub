@@ -43,7 +43,7 @@ export default function RootLayout({
           inter.variable,
           lora.variable,
           instrument.variable,
-          "overscroll-none font-sans antialiased",
+          "overscroll-none font-sans antialiased selection:bg-core selection:text-white",
         )}
       >
         <TRPCReactProvider>
