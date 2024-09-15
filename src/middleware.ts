@@ -3,21 +3,23 @@ import { NextResponse } from "next/server";
 
 const { auth } = NextAuth({ providers: [] });
 
+// All routes that are not part of the API are protected by default.
+// To make a route public, it needs to be added to here.
 const publicRoutes = ["/", "/home"];
+
+// All routes that a user should not be able to access unless logged out.
 const authRoutes = ["/auth/login", "/auth/register"];
 
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-  const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth");
+  const isApiRoute = nextUrl.pathname.startsWith("/api/");
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  // Allow all API routes related to authenication and authorization.
-  if (isApiAuthRoute) {
-    return undefined;
-  }
+  // Allow all API routes.
+  if (isApiRoute) return undefined;
 
   // Allow all routes related to authentication and authorization, unless
   // user is already logged in.
