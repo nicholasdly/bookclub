@@ -4,6 +4,7 @@ import { Instrument_Serif, Inter, Lora } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "@/components/shadcn/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,7 +47,10 @@ export default function RootLayout({
         )}
       >
         <TRPCReactProvider>
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            {children}
+            <Toaster theme="light" richColors />
+          </SessionProvider>
         </TRPCReactProvider>
       </body>
     </html>

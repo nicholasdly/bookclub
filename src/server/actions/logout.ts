@@ -7,7 +7,10 @@ import { headers } from "next/headers";
 export async function logout() {
   const ip = headers().get("x-forwarded-for") ?? "unknown";
   const { success } = await ratelimit.auth.logout.limit(ip);
-  if (!success) throw new Error("TOO_MANY_REQUESTS");
+  if (!success) throw new Error("Too many requests! Please try again later.");
 
-  await signOut();
+  await signOut({
+    redirect: true,
+    redirectTo: "/",
+  });
 }

@@ -97,9 +97,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Throws the same error for both "missing user" and "invalid password"
         // to prevent malicious actors from easily discovering genuine
         // usernames via error message or error timing.
-        if (!user || !isPasswordMatch) {
-          throw new Error("Invalid credentials!");
-        }
+        if (!user || !isPasswordMatch) return null;
 
         return user;
       },

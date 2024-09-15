@@ -13,7 +13,7 @@ import ratelimit from "@/lib/ratelimit";
 export async function register(body: z.infer<typeof registerFormSchema>) {
   const ip = headers().get("x-forwarded-for") ?? "unknown";
   const { success } = await ratelimit.auth.register.limit(ip);
-  if (!success) return { error: "Rate limit exceeded!" };
+  if (!success) return { error: "Too many requests! Please try again later." };
 
   const fields = registerFormSchema.safeParse(body);
 
@@ -44,5 +44,7 @@ export async function register(body: z.infer<typeof registerFormSchema>) {
   await signIn("credentials", {
     identifier: fields.data.username,
     password: fields.data.password,
+    redirect: true,
+    redirectTo: "/home",
   });
 }

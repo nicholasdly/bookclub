@@ -8,17 +8,18 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "../shadcn/form";
 import { Input } from "../shadcn/input";
 import { Button } from "../shadcn/button";
 import { registerFormSchema } from "@/lib/zod";
 import { register } from "@/server/actions/register";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import FormError from "./form-error";
 
 export default function RegisterForm() {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>();
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -32,25 +33,28 @@ export default function RegisterForm() {
   });
 
   const onSubmit = (form: z.infer<typeof registerFormSchema>) => {
+    setError(undefined);
+
     startTransition(() => {
-      register(form);
+      register(form).then((response) => {
+        setError(response?.error);
+      });
     });
   };
 
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-3 rounded-lg border p-5"
+        className="flex w-full max-w-96 flex-col rounded-lg"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem className="mb-2">
               <FormControl>
-                <Input disabled={isPending} {...field} />
+                <Input placeholder="Name" disabled={isPending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -60,10 +64,9 @@ export default function RegisterForm() {
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
+            <FormItem className="mb-2">
               <FormControl>
-                <Input disabled={isPending} {...field} />
+                <Input placeholder="Username" disabled={isPending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -73,10 +76,14 @@ export default function RegisterForm() {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
+            <FormItem className="mb-2">
               <FormControl>
-                <Input type="password" disabled={isPending} {...field} />
+                <Input
+                  placeholder="Password"
+                  type="password"
+                  disabled={isPending}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -86,10 +93,14 @@ export default function RegisterForm() {
           control={form.control}
           name="confirmation"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm password</FormLabel>
+            <FormItem className="mb-2">
               <FormControl>
-                <Input type="password" disabled={isPending} {...field} />
+                <Input
+                  placeholder="Confirm password"
+                  type="password"
+                  disabled={isPending}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,15 +110,20 @@ export default function RegisterForm() {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email address</FormLabel>
+            <FormItem className="mb-6">
               <FormControl>
-                <Input disabled={isPending} {...field} />
+                <Input
+                  placeholder="Email address"
+                  type="email"
+                  disabled={isPending}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        {error && <FormError message={error} className="mb-2" />}
         <Button type="submit" disabled={isPending}>
           Sign up
         </Button>

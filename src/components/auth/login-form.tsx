@@ -15,10 +15,12 @@ import { Input } from "../shadcn/input";
 import { Button } from "../shadcn/button";
 import { loginFormSchema } from "@/lib/zod";
 import { login } from "@/server/actions/login";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import FormError from "./form-error";
 
 export default function LoginForm() {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>();
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -29,22 +31,26 @@ export default function LoginForm() {
   });
 
   const onSubmit = (form: z.infer<typeof loginFormSchema>) => {
+    setError(undefined);
+
     startTransition(() => {
-      login(form);
+      login(form).then((response) => {
+        setError(response?.error);
+      });
     });
   };
 
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-3 rounded-lg border p-5"
+        className="flex w-full max-w-96 flex-col rounded-lg"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
           name="identifier"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="mb-4">
               <FormLabel>Username or email</FormLabel>
               <FormControl>
                 <Input
@@ -61,7 +67,7 @@ export default function LoginForm() {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="mb-6">
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
@@ -75,6 +81,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
+        {error && <FormError message={error} className="mb-2" />}
         <Button type="submit" disabled={isPending}>
           Sign in
         </Button>
