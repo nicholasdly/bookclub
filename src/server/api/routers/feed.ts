@@ -14,7 +14,7 @@ export const feedRouter = createTRPCRouter({
   getPublic: publicProcedure
     .input(z.object({
       cursor: z.date().nullish(),
-      limit: z.number().int().min(1).max(100).default(3),
+      limit: z.number().int().min(1).max(100).default(25),
     }))
     .query(async ({ ctx, input }) => {
       const ip = headers().get("x-forwarded-for") ?? "unknown";
