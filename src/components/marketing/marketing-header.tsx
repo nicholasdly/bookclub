@@ -14,7 +14,7 @@ export default function MarketingHeader() {
             <div className="relative size-8 overflow-hidden">
               <Image src="/favicon.svg" alt={"Bookclub"} fill />
             </div>
-            Bookclub
+            <span>Bookclub</span>
           </Link>
           <span className="text-2xl font-semibold text-muted-foreground">
             /
