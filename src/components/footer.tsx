@@ -15,7 +15,7 @@ export default async function Footer() {
     <footer className="fixed bottom-0 left-0 right-0 z-10 h-16 border-t bg-background sm:hidden">
       <nav className="flex h-full items-center justify-evenly">
         <Link
-          href="/"
+          href="/home"
           className="group flex flex-col items-center justify-center gap-1 px-4 py-2"
         >
           <HomeIcon className="group-hover:stroke-3 size-6" />
@@ -24,7 +24,7 @@ export default async function Footer() {
           </span>
         </Link>
         <Link
-          href="/"
+          href="/books"
           className="group flex flex-col items-center justify-center gap-1 p-2"
         >
           <BookMarkedIcon className="group-hover:stroke-3 size-6" />
@@ -33,7 +33,7 @@ export default async function Footer() {
           </span>
         </Link>
         <Link
-          href="/"
+          href="/clubs"
           className="group flex flex-col items-center justify-center gap-1 p-2"
         >
           <UsersIcon className="group-hover:stroke-3 size-6" />
@@ -43,7 +43,7 @@ export default async function Footer() {
         </Link>
         {session && (
           <Link
-            href="/"
+            href="/inbox"
             className="group flex flex-col items-center justify-center gap-1 p-2"
           >
             <MessageCircleIcon className="group-hover:stroke-3 size-6" />
@@ -53,7 +53,7 @@ export default async function Footer() {
           </Link>
         )}
         <Link
-          href="/"
+          href="/search"
           className="group flex flex-col items-center justify-center gap-1 p-2"
         >
           <SearchIcon className="group-hover:stroke-3 size-6" />

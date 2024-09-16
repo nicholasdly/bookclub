@@ -26,25 +26,25 @@ export default async function Leftbar() {
           <span>Bookclub</span>
         </Link>
         <div className="flex flex-col gap-2">
-          <Link href="/" className="group flex items-center gap-3 p-2">
+          <Link href="/home" className="group flex items-center gap-3 p-2">
             <HomeIcon className="group-hover:stroke-3 size-6" />
             <span className="font-semibold transition-transform group-hover:translate-x-1">
               Home
             </span>
           </Link>
-          <Link href="/" className="group flex items-center gap-3 p-2">
+          <Link href="/books" className="group flex items-center gap-3 p-2">
             <BookMarkedIcon className="group-hover:stroke-3 size-6" />
             <span className="font-semibold transition-transform group-hover:translate-x-1">
               Books
             </span>
           </Link>
-          <Link href="/" className="group flex items-center gap-3 p-2">
+          <Link href="/clubs" className="group flex items-center gap-3 p-2">
             <UsersIcon className="group-hover:stroke-3 size-6" />
             <span className="font-semibold transition-transform group-hover:translate-x-1">
               Clubs
             </span>
           </Link>
-          <Link href="/" className="group flex items-center gap-3 p-2">
+          <Link href="/search" className="group flex items-center gap-3 p-2">
             <SearchIcon className="group-hover:stroke-3 size-6" />
             <span className="font-semibold transition-transform group-hover:translate-x-1">
               Search
@@ -52,13 +52,19 @@ export default async function Leftbar() {
           </Link>
           {session && (
             <>
-              <Link href="/" className="group flex items-center gap-3 p-2">
+              <Link
+                href="/profile"
+                className="group flex items-center gap-3 p-2"
+              >
                 <UserIcon className="group-hover:stroke-3 size-6" />
                 <span className="font-semibold transition-transform group-hover:translate-x-1">
                   Profile
                 </span>
               </Link>
-              <Link href="/" className="group flex items-center gap-3 p-2">
+              <Link
+                href="/messages"
+                className="group flex items-center gap-3 p-2"
+              >
                 <MessageCircleIcon className="group-hover:stroke-3 size-6" />
                 <span className="font-semibold transition-transform group-hover:translate-x-1">
                   Messages
