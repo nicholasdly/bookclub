@@ -1,22 +1,16 @@
 import Footer from "@/components/footer";
-import Header from "@/components/header";
 import Leftbar from "@/components/leftbar";
-import Rightbar from "@/components/rightbar";
 
-export default function AppLayout({
+export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className="mx-auto flex max-w-6xl">
+    <div className="mx-auto mb-16 flex max-w-6xl sm:mb-0">
       <Leftbar />
-      <div className="w-full">
-        <Header />
-        <main className="mb-16 md:mb-0">{children}</main>
-        <Footer />
-      </div>
-      <Rightbar />
+      {children}
+      <Footer />
     </div>
   );
 }

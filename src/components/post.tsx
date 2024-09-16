@@ -98,7 +98,7 @@ function PostOptions({ id }: { id: string }) {
 }
 
 function Post(
-  post: RouterOutputs["feed"]["getPublic"]["posts"][number],
+  post: RouterOutputs["feed"]["getLatest"]["posts"][number],
   ref: ForwardedRef<HTMLElement>,
 ) {
   const session = useSession();

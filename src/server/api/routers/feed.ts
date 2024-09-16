@@ -11,7 +11,7 @@ import { desc, eq, lte } from "drizzle-orm";
 
 export const feedRouter = createTRPCRouter({
 
-  getPublic: publicProcedure
+  getLatest: publicProcedure
     .input(z.object({
       cursor: z.date().nullish(),
       limit: z.number().int().min(1).max(100).default(25),
@@ -19,7 +19,7 @@ export const feedRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const ip = headers().get("x-forwarded-for") ?? "unknown";
 
-      const { success } = await ratelimit.feed.getPublic.limit(ip);
+      const { success } = await ratelimit.feed.getLatest.limit(ip);
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
       const query = ctx.db

@@ -4,7 +4,13 @@ import { auth } from "@/server/auth";
 import { Button } from "./shadcn/button";
 import Image from "next/image";
 
-export default async function Header() {
+export default async function Header({
+  heading,
+  children,
+}: {
+  heading: string;
+  children?: React.ReactNode;
+}) {
   const session = await auth();
 
   return (
@@ -13,12 +19,15 @@ export default async function Header() {
         className="flex items-center gap-1.5 font-serif text-xl font-semibold sm:hidden"
         href="/"
       >
-        <div className="relative size-6 overflow-hidden">
+        <div className="relative size-8 overflow-hidden sm:size-6">
           <Image src="/favicon.svg" alt={"Bookclub"} fill />
         </div>
-        <span>Bookclub</span>
+        <span className="hidden sm:block">Bookclub</span>
       </Link>
-      <h1 className="hidden font-serif text-xl font-semibold sm:block">Home</h1>
+      <h1 className="hidden font-serif text-xl font-semibold sm:block">
+        {heading}
+      </h1>
+      {children}
       <div className="flex items-center gap-2 lg:hidden">
         {session ? (
           <LogOutButton />

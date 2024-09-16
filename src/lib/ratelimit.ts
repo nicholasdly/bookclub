@@ -32,7 +32,7 @@ const ratelimit = {
     checkUsername: createRatelimit(100, "1 d"),
   },
   feed: {
-    getPublic: createRatelimit(1000, "1 d"),
+    getLatest: createRatelimit(1000, "1 d"),
   },
 };
 

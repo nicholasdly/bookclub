@@ -1,29 +1,23 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import Post from "./post";
-import { LoaderCircleIcon } from "lucide-react";
+import Post from "../post";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import Loading from "./loading";
 
-function Loading() {
-  return (
-    <div className="flex justify-center py-8">
-      <LoaderCircleIcon className="size-5 animate-spin" />
-    </div>
-  );
-}
-
-export default function Feed() {
+export default function LatestFeed() {
   const [ref, entry] = useIntersectionObserver();
 
   const { data, isLoading, fetchNextPage, hasNextPage, isError, error } =
-    api.feed.getPublic.useInfiniteQuery(
+    api.feed.getLatest.useInfiniteQuery(
       {},
       {
         getNextPageParam: (page) => page.cursor,
+        refetchOnMount: false,
         refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
       },
     );
 
