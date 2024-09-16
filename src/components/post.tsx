@@ -7,15 +7,16 @@ import {
   ThumbsUpIcon,
 } from "lucide-react";
 import Image from "next/image";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { RouterOutputs } from "@/trpc/react";
+import { ForwardedRef, forwardRef } from "react";
+import dayjs from "@/lib/dayjs";
 
-dayjs.extend(relativeTime);
-
-export default function Post(post: RouterOutputs["post"]["getAll"][number]) {
+function Post(
+  post: RouterOutputs["feed"]["getPublic"]["posts"][number],
+  ref: ForwardedRef<HTMLElement>,
+) {
   return (
-    <article className="flex flex-col gap-4 p-4 hover:bg-muted">
+    <article className="flex flex-col gap-4 p-4 hover:bg-muted" ref={ref}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative size-12 overflow-hidden rounded-full">
@@ -106,3 +107,5 @@ export default function Post(post: RouterOutputs["post"]["getAll"][number]) {
     </article>
   );
 }
+
+export default forwardRef(Post);

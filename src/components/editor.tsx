@@ -16,7 +16,7 @@ export default function Editor({ user }: { user: Session["user"] }) {
     onSuccess: () => {
       setInput("");
       toast.success("Successfully created post!");
-      utils.post.getAll.invalidate();
+      utils.feed.invalidate();
     },
     onError: () => {
       toast.error("Something went wrong! Please try again later.");

@@ -25,11 +25,13 @@ const ratelimit = {
     register: createRatelimit(5, "15 m"),
   },
   post: {
-    getAll: createRatelimit(1000, "1 d"),
     create: createRatelimit(50, "1 d"),
   },
   user: {
     checkUsername: createRatelimit(100, "1 d"),
+  },
+  feed: {
+    getPublic: createRatelimit(1000, "1 d"),
   },
 };
 
