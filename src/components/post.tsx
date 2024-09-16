@@ -1,3 +1,5 @@
+"use client";
+
 import { cn, formatNumber } from "@/lib/utils";
 import {
   BookmarkIcon,
@@ -5,16 +7,99 @@ import {
   MessageCircleIcon,
   Repeat2Icon,
   ThumbsUpIcon,
+  TrashIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { RouterOutputs } from "@/trpc/react";
+import { api, RouterOutputs } from "@/trpc/react";
 import { ForwardedRef, forwardRef } from "react";
 import dayjs from "@/lib/dayjs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./shadcn/dialog";
+import { Button } from "./shadcn/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./shadcn/dropdown-menu";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+
+function PostOptions({ id }: { id: string }) {
+  const utils = api.useUtils();
+
+  const deletePost = api.post.delete.useMutation({
+    onMutate: () => {
+      const loadingToast = toast.loading("Deleting post...");
+      return { loadingToast };
+    },
+    onSuccess(data, variables, context) {
+      void utils.invalidate();
+      toast.dismiss(context.loadingToast);
+      toast.success("Successfully deleted post!");
+    },
+    onError: (error, variables, context) => {
+      toast.dismiss(context?.loadingToast);
+      toast.error("Failed to delete post! Please try again later.");
+    },
+  });
+
+  return (
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="mr-2 rounded-full p-1 transition-colors hover:bg-zinc-200">
+            <EllipsisVerticalIcon className="size-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <TrashIcon className="mr-2 h-4 w-4" />
+              <span>Delete</span>
+            </DropdownMenuItem>
+          </DialogTrigger>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This will permanently delete this post, but all replies will remain
+            uneffected. This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogTrigger asChild>
+            <Button
+              type="submit"
+              variant="destructive"
+              onClick={() => deletePost.mutate({ id })}
+              disabled={deletePost.isPending}
+            >
+              Confirm
+            </Button>
+          </DialogTrigger>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function Post(
   post: RouterOutputs["feed"]["getPublic"]["posts"][number],
   ref: ForwardedRef<HTMLElement>,
 ) {
+  const session = useSession();
+  const user = session.data?.user;
+
   return (
     <article className="flex flex-col gap-4 p-4 hover:bg-muted" ref={ref}>
       <div className="flex items-center justify-between">
@@ -35,9 +120,7 @@ function Post(
             </div>
           </div>
         </div>
-        <button className="mr-2 rounded-full p-1 transition-colors hover:bg-zinc-200">
-          <EllipsisVerticalIcon className="size-4" />
-        </button>
+        {user?.id === post.author.id && <PostOptions id={post.id} />}
       </div>
       <p className="whitespace-pre-line">{post.content}</p>
       <div className="flex items-center justify-evenly">

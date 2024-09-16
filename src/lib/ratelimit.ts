@@ -26,6 +26,7 @@ const ratelimit = {
   },
   post: {
     create: createRatelimit(50, "1 d"),
+    delete: createRatelimit(50, "1 d"),
   },
   user: {
     checkUsername: createRatelimit(100, "1 d"),
