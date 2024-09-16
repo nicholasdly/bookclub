@@ -17,6 +17,7 @@ import { register } from "@/server/actions/register";
 import { useState, useTransition } from "react";
 import FormError from "./form-error";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
   const [isPending, startTransition] = useTransition();
@@ -40,9 +41,13 @@ export default function RegisterForm() {
     setError(undefined);
 
     startTransition(() => {
-      register(form).then((response) => {
-        setError(response?.error);
-      });
+      toast.promise(
+        register(form).then((response) => setError(response?.error)),
+        {
+          loading: "Creating account...",
+          error: "Something went wrong! Please try again later.",
+        },
+      );
     });
   };
 

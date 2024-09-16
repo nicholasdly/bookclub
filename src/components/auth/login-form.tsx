@@ -17,6 +17,7 @@ import { loginFormSchema } from "@/lib/zod";
 import { login } from "@/server/actions/login";
 import { useState, useTransition } from "react";
 import FormError from "./form-error";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const [isPending, startTransition] = useTransition();
@@ -34,9 +35,13 @@ export default function LoginForm() {
     setError(undefined);
 
     startTransition(() => {
-      login(form).then((response) => {
-        setError(response?.error);
-      });
+      toast.promise(
+        login(form).then((response) => setError(response?.error)),
+        {
+          loading: "Logging in...",
+          error: "Something went wrong! Please try again later.",
+        },
+      );
     });
   };
 
