@@ -41,13 +41,17 @@ function PostOptions({ id }: { id: string }) {
       return { loadingToast };
     },
     onSuccess(data, variables, context) {
-      void utils.invalidate();
+      utils.invalidate();
       toast.dismiss(context.loadingToast);
       toast.success("Successfully deleted post!");
     },
     onError: (error, variables, context) => {
       toast.dismiss(context?.loadingToast);
-      toast.error("Failed to delete post! Please try again later.");
+      toast.error(
+        error.data?.code === "TOO_MANY_REQUESTS"
+          ? "You've reached your daily post deletion limit! Come back tomorrow."
+          : "Failed to delete post! Please try again later.",
+      );
     },
   });
 

@@ -13,13 +13,23 @@ export default function Editor({ user }: { user: Session["user"] }) {
   const utils = api.useUtils();
 
   const { mutate, isPending } = api.post.create.useMutation({
-    onSuccess: () => {
-      setInput("");
-      toast.success("Successfully created post!");
-      utils.feed.invalidate();
+    onMutate: () => {
+      const loadingToast = toast.loading("Creating post...");
+      return { loadingToast };
     },
-    onError: () => {
-      toast.error("Something went wrong! Please try again later.");
+    onSuccess: (data, variables, context) => {
+      setInput("");
+      utils.invalidate();
+      toast.dismiss(context.loadingToast);
+      toast.success("Successfully created post!");
+    },
+    onError: (error, variables, context) => {
+      toast.dismiss(context?.loadingToast);
+      toast.error(
+        error.data?.code === "TOO_MANY_REQUESTS"
+          ? "You've reached your daily post creation limit! Come back tomorrow."
+          : "Failed to create post! Please try again later.",
+      );
     },
   });
 
