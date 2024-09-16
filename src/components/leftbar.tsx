@@ -13,7 +13,7 @@ export default async function Leftbar() {
   const session = await auth();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-52 shrink-0 flex-col justify-between border-r px-5 pb-2 pt-3 sm:flex">
+    <aside className="sticky top-0 hidden h-dvh w-52 shrink-0 flex-col justify-between border-r px-5 pb-2 pt-3 sm:flex">
       <nav className="flex flex-col gap-8">
         <Link href="/" className="w-fit font-serif text-2xl font-semibold">
           Bookclub

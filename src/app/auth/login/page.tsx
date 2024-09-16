@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default async function LoginPage() {
   return (
-    <main className="flex h-screen flex-col items-center justify-center gap-6 p-5">
+    <main className="flex h-dvh flex-col items-center justify-center gap-6 p-5">
       <Link className="relative size-12 overflow-hidden" href="/">
         <Image src="/favicon.svg" alt={"Bookclub"} fill />
       </Link>

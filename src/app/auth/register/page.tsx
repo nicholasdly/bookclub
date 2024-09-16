@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 export default async function RegisterPage() {
   return (
-    <main className="flex h-screen flex-col items-center justify-center gap-6 p-5">
+    <main className="flex h-dvh flex-col items-center justify-center gap-6 p-5">
       <Link className="relative size-12 overflow-hidden" href="/">
         <Image src="/favicon.svg" alt={"Bookclub"} fill />
       </Link>

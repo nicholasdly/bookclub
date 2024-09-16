@@ -31,7 +31,7 @@ export default async function Rightbar() {
   ];
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-80 shrink-0 flex-col border-x lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-80 shrink-0 flex-col border-x lg:flex">
       <div className="flex h-12 items-center justify-end gap-2 border-b px-3 py-2">
         {session ? (
           <LogOutButton />
