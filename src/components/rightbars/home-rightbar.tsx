@@ -1,8 +1,13 @@
 import Link from "next/link";
 import Rightbar from "./rightbar";
 import { ArrowRightIcon } from "lucide-react";
+import LogOutButton from "../auth/logout-button";
+import { Button } from "../shadcn/button";
+import { auth } from "@/server/auth";
 
-export default function HomeRightbar() {
+export default async function HomeRightbar() {
+  const session = await auth();
+
   const books = [
     {
       title: "Dune Messiah",
@@ -28,6 +33,20 @@ export default function HomeRightbar() {
 
   return (
     <Rightbar>
+      <div className="flex h-12 items-center justify-end gap-2 border-b px-3 py-2">
+        {session ? (
+          <LogOutButton />
+        ) : (
+          <>
+            <Button variant="outline" size="rounded" asChild>
+              <Link href="/auth/login">Log In</Link>
+            </Button>
+            <Button variant="core" size="rounded" asChild>
+              <Link href="/auth/register">Join Bookclub</Link>
+            </Button>
+          </>
+        )}
+      </div>
       <div className="p-6">
         <Link
           href="/"
