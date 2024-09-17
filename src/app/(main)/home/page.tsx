@@ -19,11 +19,15 @@ export default async function HomePage() {
         <Header heading="Home" />
         <main>
           <Tabs defaultValue="latest">
-            <TabsList className="grid w-full grid-cols-2 rounded-none">
-              <TabsTrigger value="latest">Latest</TabsTrigger>
-              <TabsTrigger value="following">Following</TabsTrigger>
-            </TabsList>
-            {session?.user && <Editor user={session.user} />}
+            {session?.user && (
+              <>
+                <TabsList className="grid w-full grid-cols-2 rounded-none border-b">
+                  <TabsTrigger value="latest">Latest</TabsTrigger>
+                  <TabsTrigger value="following">Following</TabsTrigger>
+                </TabsList>
+                <Editor user={session.user} />
+              </>
+            )}
             <TabsContent value="latest" className="m-0">
               <LatestFeed />
             </TabsContent>

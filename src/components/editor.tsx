@@ -42,7 +42,7 @@ export default function Editor({ user }: { user: Session["user"] }) {
 
   return (
     <form
-      className="flex gap-3 border-y px-4 pb-3 pt-3"
+      className="flex gap-3 border-b px-4 pb-3 pt-3"
       onSubmit={(event) => {
         event.preventDefault();
         mutate({ content: input });
