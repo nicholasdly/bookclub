@@ -23,15 +23,17 @@ export default async function Footer() {
             Home
           </span>
         </Link>
-        <Link
-          href="/books"
-          className="group flex flex-col items-center justify-center gap-1 p-2"
-        >
-          <BookMarkedIcon className="group-hover:stroke-3 size-6" />
-          <span className="text-xs font-semibold group-hover:font-bold">
-            Books
-          </span>
-        </Link>
+        {session && (
+          <Link
+            href="/my-books"
+            className="group flex flex-col items-center justify-center gap-1 p-2"
+          >
+            <BookMarkedIcon className="group-hover:stroke-3 size-6" />
+            <span className="text-xs font-semibold group-hover:font-bold">
+              My Books
+            </span>
+          </Link>
+        )}
         <Link
           href="/clubs"
           className="group flex flex-col items-center justify-center gap-1 p-2"

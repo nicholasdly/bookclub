@@ -32,12 +32,17 @@ export default async function Leftbar() {
               Home
             </span>
           </Link>
-          <Link href="/books" className="group flex items-center gap-3 p-2">
-            <BookMarkedIcon className="group-hover:stroke-3 size-6" />
-            <span className="font-semibold transition-transform group-hover:translate-x-1">
-              Books
-            </span>
-          </Link>
+          {session && (
+            <Link
+              href="/my-books"
+              className="group flex items-center gap-3 p-2"
+            >
+              <BookMarkedIcon className="group-hover:stroke-3 size-6" />
+              <span className="font-semibold transition-transform group-hover:translate-x-1">
+                My Books
+              </span>
+            </Link>
+          )}
           <Link href="/clubs" className="group flex items-center gap-3 p-2">
             <UsersIcon className="group-hover:stroke-3 size-6" />
             <span className="font-semibold transition-transform group-hover:translate-x-1">
@@ -51,26 +56,23 @@ export default async function Leftbar() {
             </span>
           </Link>
           {session && (
-            <>
-              <Link
-                href="/profile"
-                className="group flex items-center gap-3 p-2"
-              >
-                <UserIcon className="group-hover:stroke-3 size-6" />
-                <span className="font-semibold transition-transform group-hover:translate-x-1">
-                  Profile
-                </span>
-              </Link>
-              <Link
-                href="/messages"
-                className="group flex items-center gap-3 p-2"
-              >
-                <MessageCircleIcon className="group-hover:stroke-3 size-6" />
-                <span className="font-semibold transition-transform group-hover:translate-x-1">
-                  Messages
-                </span>
-              </Link>
-            </>
+            <Link href="/profile" className="group flex items-center gap-3 p-2">
+              <UserIcon className="group-hover:stroke-3 size-6" />
+              <span className="font-semibold transition-transform group-hover:translate-x-1">
+                Profile
+              </span>
+            </Link>
+          )}
+          {session && (
+            <Link
+              href="/messages"
+              className="group flex items-center gap-3 p-2"
+            >
+              <MessageCircleIcon className="group-hover:stroke-3 size-6" />
+              <span className="font-semibold transition-transform group-hover:translate-x-1">
+                Messages
+              </span>
+            </Link>
           )}
         </div>
       </nav>
