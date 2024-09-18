@@ -1,0 +1,27 @@
+name: Pull request pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  pre-build:
+    name: Pre-build checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Formatter
+        run: npm run format:check
+
+  # TODO: Preview specific Neon database branches
+
+  # TODO: Tests
