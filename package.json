@@ -9,6 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "format": "prettier . --write",
+    "format:check": "prettier . --check",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
     "db:drop": "drizzle-kit drop",
