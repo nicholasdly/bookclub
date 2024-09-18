@@ -43,6 +43,8 @@
     "next-auth": "^5.0.0-beta.20",
     "next-themes": "^0.3.0",
     "npm": "^10.8.3",
+    "posthog-js": "^1.161.5",
+    "posthog-node": "^4.2.0",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",

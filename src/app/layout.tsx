@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/shadcn/sonner";
+import { CSPostHogProvider } from "@/analytics/client";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,21 +39,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          inter.variable,
-          lora.variable,
-          instrument.variable,
-          "overscroll-none font-sans antialiased selection:bg-core selection:text-white",
-        )}
-      >
-        <TRPCReactProvider>
-          <SessionProvider>
-            {children}
-            <Toaster theme="light" richColors />
-          </SessionProvider>
-        </TRPCReactProvider>
-      </body>
+      <SessionProvider>
+        <CSPostHogProvider>
+          <TRPCReactProvider>
+            <body
+              className={cn(
+                inter.variable,
+                lora.variable,
+                instrument.variable,
+                "overscroll-none font-sans antialiased selection:bg-core selection:text-white",
+              )}
+            >
+              {children}
+              <Toaster theme="light" richColors />
+            </body>
+          </TRPCReactProvider>
+        </CSPostHogProvider>
+      </SessionProvider>
     </html>
   );
 }

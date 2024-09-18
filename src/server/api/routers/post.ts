@@ -7,6 +7,7 @@ import * as schema from "@/server/db/schema";
 import ratelimit from "@/lib/ratelimit";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
+import posthog from "@/analytics/server";
 
 export const postRouter = createTRPCRouter({
 
@@ -27,6 +28,14 @@ export const postRouter = createTRPCRouter({
           authorId,
         })
         .returning({ id: schema.posts.id });
+
+      posthog.capture({
+        distinctId: authorId,
+        event: "create post",
+        properties: {
+          results,
+        },
+      });
 
       return results.map((post) => post.id); 
     }),
@@ -55,6 +64,14 @@ export const postRouter = createTRPCRouter({
           eq(schema.posts.authorId, authorId),
         ))
         .returning({ id: schema.posts.id });
+
+      posthog.capture({
+        distinctId: authorId,
+        event: "delete post",
+        properties: {
+          results,
+        },
+      });
 
       return results.map((post) => post.id);
     }),
