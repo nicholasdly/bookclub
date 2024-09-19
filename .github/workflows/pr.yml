@@ -51,14 +51,13 @@ jobs:
           api_key: ${{ secrets.NEON_API_KEY }}
 
       - name: Apply migrations
-        run: npm run db:migrate
-        env:
-          DATABASE_URL: ${{ steps.database.outputs.db_url }}
+        run: |
+          touch .env
+          echo DATABASE_URL: ${{ steps.database.outputs.db_url }} >> .env
+          npm run db:migrate
 
       - name: Run seed script
         run: npm run db:seed
-        env:
-          DATABASE_URL: ${{ steps.database.outputs.db_url }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -67,4 +66,4 @@ jobs:
       - name: Build project artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy project artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --env DATABASE_URL=${{ steps.database.outputs.db_url }}
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
