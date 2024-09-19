@@ -32,7 +32,7 @@ jobs:
         run: npm run format:check
 
   deploy:
-    name: Database setup and preview deployment
+    name: Preview deployment
     environment:
       name: Preview
       url: ${{ steps.deploy.outputs.url }}
@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.NEON_DATABASE_ROLE_NAME }}
           api_key: ${{ secrets.NEON_API_KEY }}
           
-      - name: Define environment variables
+      - name: Pull environment variables
         run: |
           vercel env pull .env --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
           echo DATABASE_URL=${{ steps.database.outputs.db_url }} >> .env

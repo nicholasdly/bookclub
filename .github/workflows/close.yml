@@ -10,7 +10,7 @@ on:
 jobs:
 
   clean:
-    name: Delete database preview branch
+    name: Delete preview database branch
     runs-on: ubuntu-latest
     steps:
 
