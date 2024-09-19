@@ -1,0 +1,22 @@
+name: Close pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+
+  clean:
+    name: Delete database preview branch
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Delete Neon branch
+        uses: neondatabase/delete-branch-action@v3
+        with:
+          branch: preview/${{ github.ref_name }}
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          api_key: ${{ secrets.NEON_API_KEY }}
