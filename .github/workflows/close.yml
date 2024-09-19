@@ -17,6 +17,6 @@ jobs:
       - name: Delete Neon branch
         uses: neondatabase/delete-branch-action@v3
         with:
-          branch: preview/${{ github.ref_name }}
+          branch: preview/${{ github.head_ref }}
           project_id: ${{ secrets.NEON_PROJECT_ID }}
           api_key: ${{ secrets.NEON_API_KEY }}
