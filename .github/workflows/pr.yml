@@ -1,6 +1,7 @@
 name: Pull request pipeline
 
 env:
+  SKIP_ENV_VALIDATION: true
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
@@ -30,10 +31,15 @@ jobs:
 
   deploy:
     name: Preview deployment
-    environment: preview
+    environment: Preview
     runs-on: ubuntu-latest
     needs: [pre-build]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+
       - name: Create Neon branch
         uses: neondatabase/create-branch-action@v5
         id: database
@@ -43,18 +49,17 @@ jobs:
           database: ${{ secrets.NEON_DATABASE_NAME }}
           username: ${{ secrets.NEON_DATABASE_ROLE_NAME }}
           api_key: ${{ secrets.NEON_API_KEY }}
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install dependencies
-        run: npm install
+
       - name: Apply migrations
         run: npm run db:migrate
         env:
           DATABASE_URL: ${{ steps.database.outputs.db_url }}
+
       - name: Run seed script
         run: npm run db:seed
         env:
           DATABASE_URL: ${{ steps.database.outputs.db_url }}
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel environment information
