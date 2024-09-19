@@ -48,7 +48,7 @@ jobs:
         run: npm install
 
       - name: Pull Vercel environment variables
-        run: vercel env pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel env pull .env --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Apply migrations
         run: npm run db:migrate

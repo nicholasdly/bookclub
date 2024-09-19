@@ -57,15 +57,15 @@ jobs:
           database: ${{ secrets.NEON_DATABASE_NAME }}
           username: ${{ secrets.NEON_DATABASE_ROLE_NAME }}
           api_key: ${{ secrets.NEON_API_KEY }}
+          
+      - name: Pull Vercel environment variables
+        run: vercel env pull .env --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Apply migrations
         run: |
           touch .env
           echo DATABASE_URL=${{ steps.database.outputs.db_url }} >> .env
           npm run db:migrate
-          
-      - name: Pull Vercel environment variables
-        run: vercel env pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Run seed script
         run: npm run db:seed
