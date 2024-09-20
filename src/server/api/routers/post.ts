@@ -29,14 +29,6 @@ export const postRouter = createTRPCRouter({
         })
         .returning({ id: schema.posts.id });
 
-      posthog.capture({
-        distinctId: authorId,
-        event: "create post",
-        properties: {
-          results,
-        },
-      });
-
       return results.map((post) => post.id); 
     }),
 
@@ -64,14 +56,6 @@ export const postRouter = createTRPCRouter({
           eq(schema.posts.authorId, authorId),
         ))
         .returning({ id: schema.posts.id });
-
-      posthog.capture({
-        distinctId: authorId,
-        event: "delete post",
-        properties: {
-          results,
-        },
-      });
 
       return results.map((post) => post.id);
     }),

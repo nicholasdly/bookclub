@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/shadcn/sonner";
-import { CSPostHogProvider } from "@/analytics/client";
+import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,21 +40,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-        <CSPostHogProvider>
-          <TRPCReactProvider>
-            <body
-              className={cn(
-                inter.variable,
-                lora.variable,
-                instrument.variable,
-                "overscroll-none font-sans antialiased selection:bg-core selection:text-white",
-              )}
-            >
-              {children}
-              <Toaster theme="light" richColors />
-            </body>
-          </TRPCReactProvider>
-        </CSPostHogProvider>
+        <TRPCReactProvider>
+          <body
+            className={cn(
+              inter.variable,
+              lora.variable,
+              instrument.variable,
+              "overscroll-none font-sans antialiased selection:bg-core selection:text-white",
+            )}
+          >
+            {children}
+            <Toaster theme="light" richColors />
+            <Script
+              async
+              src="https://cloud.umami.is/script.js"
+              data-website-id="6d425863-738b-440a-bcd2-f48f0db37a9b"
+            />
+          </body>
+        </TRPCReactProvider>
       </SessionProvider>
     </html>
   );
