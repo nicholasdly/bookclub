@@ -4,6 +4,7 @@ export default function MarketingPage() {
   return (
     <main className="mx-auto max-w-6xl border-x">
       <MarketingHero />
+      <div>Hello world!</div>
     </main>
   );
 }
