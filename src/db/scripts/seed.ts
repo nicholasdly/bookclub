@@ -38,6 +38,7 @@ async function main() {
     console.error("❌ Error occurred during seeding:", error);
   }
 
+  console.log("✅ Seeding complete!");
   await connection.end();
 }
 
