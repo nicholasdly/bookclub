@@ -18,21 +18,22 @@ export default async function resendVerificationCode(body: { userId: string }) {
 
   // Rate limit request by IP address.
   const { success } = await ratelimits.auth.verify.limit(ip);
-  if (!success) throw new Error("Too many requests! Please try again later.");
+  if (!success) return { error: "Too many requests! Please try again later." };
 
   // Validate request body.
   const request = z
     .object({ userId: z.string().trim().min(1) })
     .safeParse(body);
-  if (!request.success) throw new Error("Invalid body!");
+  if (!request.success) return { error: "Invalid body!" };
 
   // Check if user exists.
   const user = await db.query.users.findFirst({
     where: eq(users.id, request.data.userId),
   });
 
-  if (!user || user.emailVerified)
-    throw new Error("User does not exist or is already verified!");
+  if (!user || user.emailVerified) {
+    return { error: "User does not exist or is already verified!" };
+  }
 
   const code = otp();
 

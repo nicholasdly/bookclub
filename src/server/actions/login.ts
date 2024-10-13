@@ -12,11 +12,11 @@ export async function login(body: z.infer<typeof loginFormSchema>) {
 
   // Rate limit request by IP address.
   const { success } = await ratelimits.auth.login.limit(ip);
-  if (!success) throw new Error("Too many requests! Please try again later.");
+  if (!success) return { error: "Too many requests! Please try again later." };
 
   // Validate request body.
   const request = await loginFormSchema.safeParseAsync(body);
-  if (!request.success) throw new Error("Invalid body!");
+  if (!request.success) return { error: "Invalid body!" };
 
   // Attempt to sign in user.
   try {
@@ -30,9 +30,9 @@ export async function login(body: z.infer<typeof loginFormSchema>) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          throw new Error("Incorrect username or password!");
+          return { error: "Incorrect username or password!" };
         default:
-          throw new Error("Something went wrong! Please try again later.");
+          return { error: "Something went wrong!" };
       }
     }
 

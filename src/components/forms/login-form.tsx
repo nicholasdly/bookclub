@@ -31,9 +31,14 @@ export default function LoginForm() {
 
   const onSubmit = (form: z.infer<typeof loginFormSchema>) => {
     startTransition(() => {
-      toast.promise(login(form), {
-        loading: "Logging in...",
-        error: (error) => error.message ?? "Something went wrong!",
+      const id = toast.loading("Logging in...");
+
+      login(form).then((response) => {
+        if (response?.error) {
+          toast.error(response.error, { id });
+        } else {
+          toast.dismiss(id);
+        }
       });
     });
   };

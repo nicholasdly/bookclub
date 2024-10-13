@@ -51,7 +51,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   pages: {
     signIn: "/auth/login",
-    newUser: "/home",
   },
   callbacks: {
     async jwt({ token }) {
@@ -89,6 +88,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "password", type: "password" },
       },
       authorize: async (credentials) => {
+        // Returning `null` will cause a `CredentialsSignin` error to be
+        // thrown. Annoyingly, this will always be logged server-side.
+
         const fields = loginFormSchema.safeParse(credentials);
         if (!fields.success) return null;
 

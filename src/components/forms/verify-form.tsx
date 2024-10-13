@@ -28,11 +28,14 @@ export default function VerifyForm({ userId }: { userId: string }) {
 
   const onSubmit = (form: z.infer<typeof verifyFormSchema>) => {
     startTransition(() => {
-      toast.promise(verify(form), {
-        loading: "Verifying account...",
-        error: (error) => error.message ?? "Something went wrong!",
-        success: "Verification successful! You may now sign in.",
-        duration: 10_000,
+      const id = toast.loading("Verifiying account...");
+
+      verify(form).then((response) => {
+        if (response?.error) {
+          toast.error(response.error, { id });
+        } else {
+          toast.success("Email verified! You may now sign in.", { id });
+        }
       });
     });
   };

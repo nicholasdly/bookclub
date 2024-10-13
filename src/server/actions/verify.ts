@@ -17,11 +17,11 @@ export default async function verify(body: z.infer<typeof verifyFormSchema>) {
 
   // Rate limit request by IP address.
   const { success } = await ratelimits.auth.verify.limit(ip);
-  if (!success) throw new Error("Too many requests! Please try again later.");
+  if (!success) return { error: "Too many requests! Please try again later." };
 
   // Validate request body.
   const request = verifyFormSchema.safeParse(body);
-  if (!request.success) throw new Error("Invalid body!");
+  if (!request.success) return { error: "Invalid body!" };
 
   // Check if user exists.
   const user = await db.query.users.findFirst({
@@ -29,7 +29,7 @@ export default async function verify(body: z.infer<typeof verifyFormSchema>) {
   });
 
   if (!user || user.emailVerified) {
-    throw new Error("User does not exist or is already verified!");
+    return { error: "User does not exist or is already verified!" };
   }
 
   // Check if a valid verification code exists.
@@ -41,7 +41,7 @@ export default async function verify(body: z.infer<typeof verifyFormSchema>) {
     ),
   });
 
-  if (!verificationCode) throw new Error("Invalid verification code!");
+  if (!verificationCode) return { error: "Invalid verification code!" };
 
   await db.transaction(async (tx) => {
     // Update user's `emailVerified` timestamp.

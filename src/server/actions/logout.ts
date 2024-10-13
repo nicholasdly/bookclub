@@ -9,7 +9,7 @@ export async function logout() {
 
   // Rate limit request by IP address.
   const { success } = await ratelimits.auth.logout.limit(ip);
-  if (!success) throw new Error("Too many requests! Please try again later.");
+  if (!success) return { error: "Too many requests! Please try again later." };
 
   // Attempt to sign out user.
   await signOut({

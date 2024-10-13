@@ -23,11 +23,11 @@ export async function register(body: z.infer<typeof registerFormSchema>) {
 
   // Rate limit request by IP address.
   const { success } = await ratelimits.auth.register.limit(ip);
-  if (!success) throw new Error("Too many requests! Please try again later.");
+  if (!success) return { error: "Too many requests! Please try again later." };
 
   // Validate request body.
   const request = registerFormSchema.safeParse(body);
-  if (!request.success) throw new Error("Invalid body!");
+  if (!request.success) return { error: "Invalid body!" };
 
   // Check if there exists a user with the same username or email.
   const existingUser = await db.query.users.findFirst({
@@ -38,11 +38,11 @@ export async function register(body: z.infer<typeof registerFormSchema>) {
   });
 
   if (existingUser && existingUser.username === request.data.username) {
-    throw new Error("A user already exists with that username!");
+    return { error: "A user already exists with that username!" };
   }
 
   if (existingUser && existingUser.email === request.data.email) {
-    throw new Error("A user already exists with that email!");
+    return { error: "A user already exists with that email!" };
   }
 
   const { user, code } = await db.transaction(async (tx) => {

@@ -33,9 +33,14 @@ export default function RegisterForm() {
 
   const onSubmit = (form: z.infer<typeof registerFormSchema>) => {
     startTransition(() => {
-      toast.promise(register(form), {
-        loading: "Creating account...",
-        error: (error) => error.message ?? "Something went wrong!",
+      const id = toast.loading("Creating account...");
+
+      register(form).then((response) => {
+        if (response?.error) {
+          toast.error(response.error, { id });
+        } else {
+          toast.dismiss(id);
+        }
       });
     });
   };
