@@ -1,0 +1,4 @@
+.github/*
+.vscode/*
+src/db/migrations/*
+src/db/scripts/*
