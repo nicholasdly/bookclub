@@ -29,6 +29,8 @@ export async function verify(body: z.infer<typeof verifyFormSchema>) {
 
   if (error) {
     switch (error.code) {
+      case "otp_expired":
+        return { error: "That code has expired or is invalid!" };
       default:
         console.error({
           cause: "supabase.auth.verifyOtp",
