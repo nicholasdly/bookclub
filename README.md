@@ -12,7 +12,7 @@ Inspired by other social platforms such as [Goodreads](https://www.goodreads.com
 
 - **Web Framework**: [Next.js](https://nextjs.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/)
-- **Backend**: [tRPC](https://trpc.io/)and [Upstash](https://upstash.com/)
+- **Backend**: [Server Actions](https://react.dev/reference/rsc/server-actions) and [Upstash](https://upstash.com/)
 - **Database**: [Supabase](https://supabase.com/) and [Drizzle ORM](https://orm.drizzle.team/)
 - **Deployment**: [Vercel](https://vercel.com/)
 
