@@ -42,11 +42,23 @@ export async function verify(body: z.infer<typeof verifyFormSchema>) {
   }
 
   await db.transaction(async (tx) => {
-    await tx.insert(profiles).values({
-      id: data.user!.id,
-      username: data.user!.user_metadata.username,
-      name: data.user!.user_metadata.display_name,
+    const [profile] = await tx
+      .insert(profiles)
+      .values({
+        id: data.user!.id,
+        username: data.user!.user_metadata.username,
+        name: data.user!.user_metadata.display_name,
+      })
+      .returning();
+
+    const { error } = await supabase.auth.updateUser({
+      data: {
+        avatar_url: profile.image,
+        email_verified: true,
+      },
     });
+
+    if (error) tx.rollback();
   });
 
   revalidatePath("/", "layout");
