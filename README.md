@@ -1,8 +1,8 @@
-# Bookclub - The social platform for bookworms
+# Bookclub - The social platform for bookworms.
 
 > Bookclub is your place to discuss, track, and review books with the internet.
 
-Inspired by other social platforms such as [Goodreads](https://www.goodreads.com/) and [X](https://twitter.com/), **Bookclub** is built to be a community for bookworms on the internet.
+Inspired by other social platforms such as [Goodreads](https://www.goodreads.com/) and [Strava](https://strava.com/), **Bookclub** is built to be a community for bookworms on the internet.
 
 - Check it out here: [bookclub.social](https://bookclub.social/)
 
@@ -13,8 +13,7 @@ Inspired by other social platforms such as [Goodreads](https://www.goodreads.com
 - **Web Framework**: [Next.js](https://nextjs.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/)
 - **Backend**: [tRPC](https://trpc.io/)and [Upstash](https://upstash.com/)
-- **Database**: [Neon](https://neon.tech/home) and [Drizzle ORM](https://orm.drizzle.team/)
-- **Authentication**: [Auth.js](https://authjs.dev/)
+- **Database**: [Supabase](https://supabase.com/) and [Drizzle ORM](https://orm.drizzle.team/)
 - **Deployment**: [Vercel](https://vercel.com/)
 
 ### Prerequisites
@@ -31,7 +30,7 @@ To get started contributing to **Bookclub**, it is assumed you have Node.js and 
 npm install
 ```
 
-3. Create and populate a `.env` file based off of [`.env.example`](.env.example).
+3. Create and populate a `.env.local` file based off of [`.env.example`](.env.example).
 
 4. Run the following command to apply all database migrations to your database branch.
 
