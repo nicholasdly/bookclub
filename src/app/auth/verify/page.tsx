@@ -38,6 +38,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
         </p>
       </div>
       <VerifyForm email={email} />
+      {/* TODO: Add a button to send a new verification code. */}
     </main>
   );
 }
