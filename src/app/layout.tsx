@@ -25,7 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(inter.variable, "overscroll-none font-sans antialiased")}
+        className={cn(
+          inter.variable,
+          "overscroll-none font-sans antialiased selection:bg-tertiary selection:text-tertiary-foreground",
+        )}
       >
         {children}
         <Toaster theme="light" richColors />

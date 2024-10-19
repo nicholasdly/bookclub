@@ -90,7 +90,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" variant="tertiary" disabled={isPending}>
           Sign in
         </Button>
       </form>

@@ -135,7 +135,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" variant="tertiary" disabled={isPending}>
           Sign up
         </Button>
       </form>

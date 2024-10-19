@@ -12,6 +12,12 @@ const config: Config = {
   },
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)"],
+      },
+      fontSize: {
+        "2xs": "10px",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -30,6 +36,11 @@ const config: Config = {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+        },
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary))",
+          foreground: "hsl(var(--tertiary-foreground))",
+          border: "hsl(var(--tertiary-border))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -72,4 +83,5 @@ const config: Config = {
   },
   plugins: [require("tailwindcss-animate")],
 };
+
 export default config;
