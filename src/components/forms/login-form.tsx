@@ -1,8 +1,15 @@
 "use client";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import loginFormSchema from "@/lib/zod/login-form-schema";
+import { login } from "@/server/actions/login";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -12,11 +19,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { useTransition } from "react";
-import { toast } from "sonner";
-import loginFormSchema from "@/lib/zod/login-form-schema";
-import { login } from "@/server/actions/login";
 
 export default function LoginForm() {
   const [isPending, startTransition] = useTransition();
@@ -24,7 +26,7 @@ export default function LoginForm() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      identifier: "",
+      email: "",
       password: "",
     },
   });
@@ -33,13 +35,15 @@ export default function LoginForm() {
     startTransition(() => {
       const id = toast.loading("Logging in...");
 
-      login(form).then((response) => {
-        if (response?.error) {
-          toast.error(response.error, { id });
-        } else {
-          toast.dismiss(id);
-        }
-      });
+      login(form)
+        .then((response) => {
+          if (response?.error) {
+            toast.error(response.error, { id });
+          } else {
+            toast.dismiss(id);
+          }
+        })
+        .catch(() => toast.error("Something went wrong!", { id }));
     });
   };
 
@@ -51,15 +55,16 @@ export default function LoginForm() {
       >
         <FormField
           control={form.control}
-          name="identifier"
+          name="email"
           render={({ field }) => (
             <FormItem className="mb-4">
-              <FormLabel>Username or email</FormLabel>
+              <FormLabel>Email address</FormLabel>
               <FormControl>
                 <Input
-                  autoFocus
-                  autoComplete="identifier"
+                  type="email"
+                  autoComplete="email"
                   disabled={isPending}
+                  autoFocus
                   {...field}
                 />
               </FormControl>
@@ -85,7 +90,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" variant="core" disabled={isPending}>
+        <Button type="submit" disabled={isPending}>
           Sign in
         </Button>
       </form>

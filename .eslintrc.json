@@ -1,6 +1,6 @@
 {
   "plugins": ["drizzle"],
-  "extends": ["next/typescript", "next/core-web-vitals"],
+  "extends": ["next/core-web-vitals", "next/typescript"],
   "rules": {
     "drizzle/enforce-delete-with-where": [
       "error",

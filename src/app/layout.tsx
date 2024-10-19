@@ -1,10 +1,9 @@
-import "@/styles/globals.css";
-import { Inter } from "next/font/google";
 import type { Metadata } from "next";
-import { cn } from "@/lib/utils";
+import { Inter } from "next/font/google";
+
 import { Toaster } from "@/components/ui/sonner";
-import Script from "next/script";
-import { SessionProvider } from "next-auth/react";
+import { cn } from "@/lib/utils";
+import "@/styles/globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,22 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SessionProvider>
-        <body
-          className={cn(
-            inter.variable,
-            "overscroll-none font-sans antialiased selection:bg-core selection:text-white",
-          )}
-        >
-          {children}
-          <Toaster theme="light" richColors />
-          <Script
-            async
-            src="https://cloud.umami.is/script.js"
-            data-website-id="6d425863-738b-440a-bcd2-f48f0db37a9b"
-          />
-        </body>
-      </SessionProvider>
+      <body
+        className={cn(
+          inter.variable,
+          "overscroll-none font-sans antialiased selection:bg-core selection:text-white",
+        )}
+      >
+        {children}
+        <Toaster theme="light" richColors />
+      </body>
     </html>
   );
 }

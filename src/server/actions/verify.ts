@@ -1,77 +1,52 @@
 "use server";
 
-import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { ratelimits } from "@/server/ratelimit";
-import verifyFormSchema from "@/lib/zod/verify-form-schema";
-import db from "@/db";
-import { and, eq, gte } from "drizzle-orm";
-import { users, verificationCodes } from "@/db/schema";
-import { redirect, RedirectType } from "next/navigation";
-import { env } from "@/env";
-import resend from "../email";
-import { WelcomeEmailTemplate } from "@/components/emails/welcome-email-template";
+import { redirect } from "next/navigation";
+import { z } from "zod";
 
-export default async function verify(body: z.infer<typeof verifyFormSchema>) {
+import db from "@/db";
+import { profiles } from "@/db/schema";
+import { createClient } from "@/lib/supabase/server";
+import verifyFormSchema from "@/lib/zod/verify-form-schema";
+import { ratelimits } from "@/server/ratelimit";
+
+export async function verify(body: z.infer<typeof verifyFormSchema>) {
   const ip = headers().get("x-forwarded-for") ?? "unknown";
 
-  // Rate limit request by IP address.
-  const { success } = await ratelimits.auth.verify.limit(ip);
+  const { success } = await ratelimits.auth.login.limit(ip);
   if (!success) return { error: "Too many requests! Please try again later." };
 
-  // Validate request body.
-  const request = verifyFormSchema.safeParse(body);
+  const request = await verifyFormSchema.safeParseAsync(body);
   if (!request.success) return { error: "Invalid body!" };
 
-  // Check if user exists.
-  const user = await db.query.users.findFirst({
-    where: eq(users.id, request.data.userId),
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.verifyOtp({
+    email: request.data.email,
+    token: request.data.token,
+    type: "email",
   });
 
-  if (!user || user.emailVerified) {
-    return { error: "User does not exist or is already verified!" };
+  if (error) {
+    switch (error.code) {
+      default:
+        console.error({
+          cause: "supabase.auth.verifyOtp",
+          code: error.code,
+          message: error.message,
+        });
+        return { error: "Something went wrong!" };
+    }
   }
 
-  // Check if a valid verification code exists.
-  const verificationCode = await db.query.verificationCodes.findFirst({
-    where: and(
-      eq(verificationCodes.userId, request.data.userId),
-      eq(verificationCodes.code, request.data.code),
-      gte(verificationCodes.expiresAt, new Date()),
-    ),
-  });
-
-  if (!verificationCode) return { error: "Invalid verification code!" };
-
   await db.transaction(async (tx) => {
-    // Update user's `emailVerified` timestamp.
-    await tx
-      .update(users)
-      .set({ emailVerified: new Date() })
-      .where(eq(users.id, user.id));
-
-    // Delete all verification codes for the user, since they are now verified.
-    await tx
-      .delete(verificationCodes)
-      .where(eq(verificationCodes.userId, user.id));
+    await tx.insert(profiles).values({
+      id: data.user!.id,
+      username: data.user!.user_metadata.username,
+      name: data.user!.user_metadata.display_name,
+    });
   });
 
-  // Add user to Resend audience for Bookclub newsletter.
-  await resend.contacts.create({
-    audienceId: env.RESEND_AUDIENCE_ID,
-    firstName: user.username,
-    email: user.email,
-  });
-
-  // Schedule welcome email for the user.
-  await resend.emails.send({
-    from: "Nicholas Ly <hello@bookclub.social>",
-    to: user.email,
-    subject: "Welcome to Bookclub!",
-    react: WelcomeEmailTemplate({ username: user.username }),
-    // TODO: Add plain text version of welcome email.
-    scheduledAt: new Date(Date.now() + 1000 * 60 * 30).toISOString(), // 30 minutes
-  });
-
-  redirect("/auth/login", RedirectType.replace);
+  revalidatePath("/", "layout");
+  redirect("/home");
 }

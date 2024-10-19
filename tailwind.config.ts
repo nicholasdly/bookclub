@@ -12,12 +12,6 @@ const config: Config = {
   },
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["var(--font-inter)"],
-      },
-      fontSize: {
-        "2xs": "10px",
-      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -48,10 +42,6 @@ const config: Config = {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
-        },
-        core: {
-          DEFAULT: "hsl(var(--core))",
-          border: "hsl(var(--core-border))",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

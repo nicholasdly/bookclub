@@ -1,12 +1,14 @@
 "use client";
 
-import verifyFormSchema from "@/lib/zod/verify-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { toast } from "sonner";
-import verify from "@/server/actions/verify";
+import { z } from "zod";
+
+import verifyFormSchema from "@/lib/zod/verify-form-schema";
+import { verify } from "@/server/actions/verify";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import {
   InputOTP,
@@ -15,14 +17,14 @@ import {
   InputOTPSlot,
 } from "../ui/input-otp";
 
-export default function VerifyForm({ userId }: { userId: string }) {
+export default function ConfirmForm({ email }: { email: string }) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof verifyFormSchema>>({
     resolver: zodResolver(verifyFormSchema),
     defaultValues: {
-      userId,
-      code: "",
+      email,
+      token: "",
     },
   });
 
@@ -30,13 +32,15 @@ export default function VerifyForm({ userId }: { userId: string }) {
     startTransition(() => {
       const id = toast.loading("Verifiying account...");
 
-      verify(form).then((response) => {
-        if (response?.error) {
-          toast.error(response.error, { id });
-        } else {
-          toast.success("Email verified! You may now sign in.", { id });
-        }
-      });
+      verify(form)
+        .then((response) => {
+          if (response?.error) {
+            toast.error(response.error, { id });
+          } else {
+            toast.success("Successfully created account!", { id });
+          }
+        })
+        .catch(() => toast.error("Something went wrong!", { id }));
     });
   };
 
@@ -48,7 +52,7 @@ export default function VerifyForm({ userId }: { userId: string }) {
       >
         <FormField
           control={form.control}
-          name="code"
+          name="token"
           render={({ field }) => (
             <FormItem>
               <FormControl className="w-fit">

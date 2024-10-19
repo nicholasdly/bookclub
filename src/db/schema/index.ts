@@ -1,3 +1,2 @@
-export * from "./user";
-export * from "./account";
-export * from "./verificationCodes";
+export * from "./users";
+export * from "./profiles";

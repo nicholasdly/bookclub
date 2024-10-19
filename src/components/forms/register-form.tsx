@@ -1,8 +1,15 @@
 "use client";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import registerFormSchema from "@/lib/zod/register-form-schema";
+import { register } from "@/server/actions/register";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -11,11 +18,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { useTransition } from "react";
-import { toast } from "sonner";
-import { register } from "@/server/actions/register";
-import registerFormSchema from "@/lib/zod/register-form-schema";
 
 export default function RegisterForm() {
   const [isPending, startTransition] = useTransition();
@@ -35,13 +37,15 @@ export default function RegisterForm() {
     startTransition(() => {
       const id = toast.loading("Creating account...");
 
-      register(form).then((response) => {
-        if (response?.error) {
-          toast.error(response.error, { id });
-        } else {
-          toast.dismiss(id);
-        }
-      });
+      register(form)
+        .then((response) => {
+          if (response?.error) {
+            toast.error(response.error, { id });
+          } else {
+            toast.dismiss(id);
+          }
+        })
+        .catch(() => toast.error("Something went wrong!", { id }));
     });
   };
 
@@ -131,7 +135,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" variant="core" disabled={isPending}>
+        <Button type="submit" disabled={isPending}>
           Sign up
         </Button>
       </form>
