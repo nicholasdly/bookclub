@@ -6,8 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 export default async function HomePage() {
   const supabase = createClient();
 
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
+  const { data } = await supabase.auth.getUser();
+  if (!data?.user) {
     redirect("/auth/login");
   }
 
