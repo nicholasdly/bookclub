@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
-import UserButton from "@/components/user-button";
+import Page from "@/components/page";
+import { Navbar, Sidebar } from "@/components/sidebar";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function HomePage() {
@@ -11,5 +12,11 @@ export default async function HomePage() {
     redirect("/auth/login");
   }
 
-  return <UserButton user={data.user} />;
+  return (
+    <Page>
+      <Navbar />
+      <main>Home Page</main>
+      <Sidebar side="right">Right Sidebar</Sidebar>
+    </Page>
+  );
 }

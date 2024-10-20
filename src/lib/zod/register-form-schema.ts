@@ -1,15 +1,26 @@
 import { z } from "zod";
 
+const restrictedUsernames = [
+  "admin",
+  "administrator",
+  "support",
+  "bookclub",
+  "home",
+];
+
 const registerFormSchema = z
   .object({
     username: z
       .string()
       .trim()
       .min(4, "Username must contain at least 4 characters.")
-      .max(15, "Username cannot exceed than 15 characters.")
-      .refine((value) => /^[a-z0-9_]+$/.test(value), {
+      .max(15, "Username cannot exceed more than 15 characters.")
+      .refine((username) => /^[a-z0-9_]+$/.test(username), {
         message:
           "Username can only consist of lowercase letters, numbers, and underscores.",
+      })
+      .refine((username) => !restrictedUsernames.includes(username), {
+        message: "Username is restricted.",
       }),
     password: z
       .string()

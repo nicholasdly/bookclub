@@ -21,7 +21,7 @@ export default async function RegisterPage() {
       <h1 className="text-nowrap text-xl font-bold">Create an account</h1>
       <RegisterForm />
       <div className="flex gap-1 text-sm">
-        <span className="text-muted-foreground text-nowrap">
+        <span className="text-nowrap text-muted-foreground">
           Already have an account?
         </span>
         <Link

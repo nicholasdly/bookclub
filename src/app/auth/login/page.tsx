@@ -21,7 +21,7 @@ export default async function LoginPage() {
       <h1 className="text-nowrap text-xl font-bold">Sign in to your account</h1>
       <LoginForm />
       <div className="flex gap-1 text-sm">
-        <span className="text-muted-foreground text-nowrap">
+        <span className="text-nowrap text-muted-foreground">
           Don&apos;t have an account?
         </span>
         <Link
