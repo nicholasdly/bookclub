@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
 
 function Hero() {
   return (
@@ -15,7 +16,7 @@ function Hero() {
         </h2>
         <div className="flex justify-center lg:justify-start">
           <Button
-            variant="core"
+            variant="tertiary"
             size="lg"
             className="w-full text-base font-semibold sm:w-56"
             asChild

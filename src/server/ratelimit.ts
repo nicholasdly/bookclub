@@ -1,10 +1,13 @@
 import "server-only";
 
-import { Redis } from "@upstash/redis";
 import { env } from "@/env";
 import { Duration, Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-const redis = Redis.fromEnv();
+const redis = new Redis({
+  url: env.UPSTASH_REDIS_REST_URL,
+  token: env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 /**
  * Helper function for creating a new `Ratelimit` instance using the sliding
@@ -39,8 +42,5 @@ export const ratelimits = {
     logout: createRatelimit(100, "1 d"),
     register: createRatelimit(5, "1 d"),
     verify: createRatelimit(25, "1 d"),
-  },
-  user: {
-    get: createRatelimit(500, "1 d"),
   },
 };

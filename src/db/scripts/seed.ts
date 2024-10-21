@@ -7,14 +7,12 @@
  */
 
 import postgres from "postgres";
+import { env } from "@/env";
 import { drizzle } from "drizzle-orm/postgres-js";
+import * as schema from "../schema";
 import { getTableName, sql, Table } from "drizzle-orm";
 
-import "dotenv/config";
-import { env } from "@/env";
-import * as schema from "../schema";
-
-const connection = postgres(env.DATABASE_URL, { max: 1 });
+const connection = postgres(env.DATABASE_URL);
 const db = drizzle(connection, { schema });
 
 async function resetTable(database: typeof db, table: Table) {

@@ -1,10 +1,13 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import Image from "next/image";
-import { auth } from "@/server/auth";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
 
 async function Header() {
-  const session = await auth();
+  const supabase = createClient();
+
+  const { data } = await supabase.auth.getUser();
 
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background px-3.5 py-3">
@@ -25,8 +28,8 @@ async function Header() {
           </Link>
         </Button>
       </div>
-      {session ? (
-        <Button variant="core" size="sm" asChild>
+      {data.user ? (
+        <Button variant="tertiary" size="sm" asChild>
           <Link href="/home">Go home</Link>
         </Button>
       ) : (
@@ -39,7 +42,7 @@ async function Header() {
           >
             <Link href="/auth/login">Log in</Link>
           </Button>
-          <Button variant="core" size="sm" asChild>
+          <Button variant="tertiary" size="sm" asChild>
             <Link href="/auth/register">Join the club</Link>
           </Button>
         </div>

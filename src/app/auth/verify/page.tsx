@@ -1,20 +1,27 @@
-import { auth } from "@/server/auth";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import Image from "next/image";
-import VerifyForm from "@/components/forms/verify-form";
 import { z } from "zod";
-import ResendButton from "./resend-button";
+
+import VerifyForm from "@/components/forms/verify-form";
+import { createClient } from "@/lib/supabase/server";
 
 interface VerifyPageProps {
-  params: { userId: string };
+  searchParams: { email: string };
 }
 
-export default async function VerifyPage({ params }: VerifyPageProps) {
-  const session = await auth();
-  if (session?.user) redirect("/home");
+export default async function VerifyPage({ searchParams }: VerifyPageProps) {
+  const supabase = createClient();
 
-  const { success, data: userId } = z.string().uuid().safeParse(params.userId);
+  const { data } = await supabase.auth.getUser();
+  if (data?.user) {
+    redirect("/home");
+  }
+
+  const { success, data: email } = z
+    .string()
+    .email()
+    .safeParse(searchParams.email);
   if (!success) redirect("/");
 
   return (
@@ -30,8 +37,8 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
           Enter the verification code sent to your email.
         </p>
       </div>
-      <VerifyForm userId={userId} />
-      <ResendButton userId={userId} />
+      <VerifyForm email={email} />
+      {/* TODO: Add a button to send a new verification code. */}
     </main>
   );
 }

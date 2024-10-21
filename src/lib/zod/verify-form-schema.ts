@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const verifyFormSchema = z.object({
-  userId: z.string().uuid(),
-  code: z
+  email: z.string().email(),
+  token: z
     .string()
     .trim()
     .length(6, "Enter the verification code sent to your email."),

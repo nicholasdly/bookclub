@@ -1,4 +1,4 @@
-import { sql, SQL } from "drizzle-orm";
+import { SQL, sql } from "drizzle-orm";
 import { AnyPgColumn } from "drizzle-orm/pg-core";
 
 /**
