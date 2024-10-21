@@ -26,14 +26,14 @@ export function Sidebar({
   children: React.ReactNode;
 }>) {
   const variants = {
-    left: "sm:flex border-r",
-    right: "lg:flex border-l",
+    left: "md:flex border-r",
+    right: "xl:flex border-l",
   };
 
   return (
     <aside
       className={cn(
-        "hidden flex-col text-sidebar-foreground",
+        "hidden flex-col bg-sidebar text-sidebar-foreground",
         variants[side],
         className,
       )}
@@ -64,7 +64,7 @@ export function Navbar() {
   );
 
   return (
-    <Sidebar side="left" className="w-80 justify-between p-4">
+    <Sidebar side="left" className="w-64 justify-between p-4">
       <nav className="flex flex-col">
         <Navlink url="/home" label="Home" icon={<HomeIcon />} />
         <Navlink url="/home" label="Books" icon={<BookMarkedIcon />} />

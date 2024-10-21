@@ -18,7 +18,7 @@ async function Header() {
   const { data } = await supabase.auth.getUser();
 
   return (
-    <header className="fixed inset-x-0 top-0 h-[60px] border-b p-3">
+    <header className="fixed inset-x-0 top-0 z-10 h-[60px] border-b bg-sidebar p-3">
       <div className="flex items-center justify-between">
         <section className="flex items-center gap-2.5">
           <div className="relative size-8 overflow-hidden">
@@ -59,7 +59,7 @@ function Footer() {
   }: Readonly<{ url: string; label: string; icon: React.ReactNode }>) => (
     <Button
       variant="ghost"
-      className="size-full flex-col gap-1 rounded-none p-0 [&_svg]:size-6"
+      className="z-10 size-full flex-col gap-1 rounded-none p-0 [&_svg]:size-6"
       asChild
     >
       <Link href={url}>
@@ -70,7 +70,7 @@ function Footer() {
   );
 
   return (
-    <footer className="fixed inset-x-0 bottom-0 block h-[60px] border-t sm:hidden">
+    <footer className="fixed inset-x-0 bottom-0 block h-[60px] border-t bg-sidebar md:hidden">
       <nav className="flex h-full justify-evenly">
         <Navlink url="/home" label="Home" icon={<HomeIcon />} />
         <Navlink url="/home" label="Books" icon={<BookMarkedIcon />} />
@@ -87,7 +87,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="bg-sidebar">
+    <div>
       <Header />
       {children}
       <Footer />

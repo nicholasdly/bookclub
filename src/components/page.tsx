@@ -14,7 +14,7 @@ export default function Page({
   return (
     <div
       className={cn(
-        "flex min-h-svh py-[60px] sm:pb-0 [&_main]:grow [&_main]:bg-background",
+        "flex min-h-svh py-[60px] sm:pb-0 [&_main]:grow",
         className,
       )}
     >
