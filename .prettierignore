@@ -3,3 +3,4 @@
 src/db/migrations/*
 src/db/scripts/*
 src/components/ui/*
+supabase/*

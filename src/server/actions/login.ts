@@ -21,20 +21,23 @@ export async function login(body: z.infer<typeof loginFormSchema>) {
   const supabase = createClient();
   const { error } = await supabase.auth.signInWithPassword(request.data);
 
-  if (error) {
-    switch (error.code) {
-      case "invalid_credentials":
-        return { error: "Incorrect email or password!" };
-      default:
-        console.error({
-          cause: "supabase.auth.signInWithPassword",
-          code: error.code,
-          message: error.message,
-        });
-        return { error: "Something went wrong!" };
-    }
+  if (!error) {
+    revalidatePath("/", "layout");
+    redirect("/home");
   }
 
-  revalidatePath("/", "layout");
-  redirect("/home");
+  if (
+    error.code === "invalid_credentials" ||
+    error.message === "Invalid login credentials"
+  ) {
+    return { error: "Incorrect email or password!" };
+  }
+
+  console.error({
+    cause: "supabase.auth.signInWithPassword",
+    code: error.code,
+    message: error.message,
+  });
+
+  return { error: "Something went wrong!" };
 }

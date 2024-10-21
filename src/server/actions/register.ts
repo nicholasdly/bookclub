@@ -65,20 +65,18 @@ export async function register(body: z.infer<typeof registerFormSchema>) {
     },
   });
 
-  if (error) {
-    switch (error.code) {
-      default:
-        console.error({
-          cause: "supabase.auth.signUp",
-          code: error.code,
-          message: error.message,
-        });
-        return { error: "Something went wrong!" };
-    }
+  if (!error) {
+    const searchParams = new URLSearchParams({ email: request.data.email });
+
+    revalidatePath("/", "layout");
+    redirect("/auth/verify?" + searchParams.toString());
   }
 
-  const searchParams = new URLSearchParams({ email: request.data.email });
+  console.error({
+    cause: "supabase.auth.signUp",
+    code: error.code,
+    message: error.message,
+  });
 
-  revalidatePath("/", "layout");
-  redirect("/auth/verify?" + searchParams.toString());
+  return { error: "Something went wrong!" };
 }

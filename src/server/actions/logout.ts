@@ -16,18 +16,16 @@ export async function logout() {
   const supabase = createClient();
   const { error } = await supabase.auth.signOut();
 
-  if (error) {
-    switch (error.code) {
-      default:
-        console.error({
-          cause: "supabase.auth.signOut",
-          code: error.code,
-          message: error.message,
-        });
-        return { error: "Something went wrong!" };
-    }
+  if (!error) {
+    revalidatePath("/", "layout");
+    redirect("/");
   }
 
-  revalidatePath("/", "layout");
-  redirect("/");
+  console.error({
+    cause: "supabase.auth.signOut",
+    code: error.code,
+    message: error.message,
+  });
+
+  return { error: "Something went wrong!" };
 }

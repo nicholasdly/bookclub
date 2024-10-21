@@ -27,40 +27,40 @@ export async function verify(body: z.infer<typeof verifyFormSchema>) {
     type: "email",
   });
 
-  if (error) {
-    switch (error.code) {
-      case "otp_expired":
-        return { error: "That code has expired or is invalid!" };
-      default:
-        console.error({
-          cause: "supabase.auth.verifyOtp",
-          code: error.code,
-          message: error.message,
-        });
-        return { error: "Something went wrong!" };
-    }
-  }
+  if (!error) {
+    await db.transaction(async (tx) => {
+      const [profile] = await tx
+        .insert(profiles)
+        .values({
+          id: data.user!.id,
+          username: data.user!.user_metadata.username,
+          name: data.user!.user_metadata.display_name,
+        })
+        .returning();
 
-  await db.transaction(async (tx) => {
-    const [profile] = await tx
-      .insert(profiles)
-      .values({
-        id: data.user!.id,
-        username: data.user!.user_metadata.username,
-        name: data.user!.user_metadata.display_name,
-      })
-      .returning();
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          avatar_url: profile.image,
+          email_verified: true,
+        },
+      });
 
-    const { error } = await supabase.auth.updateUser({
-      data: {
-        avatar_url: profile.image,
-        email_verified: true,
-      },
+      if (error) tx.rollback();
     });
 
-    if (error) tx.rollback();
+    revalidatePath("/", "layout");
+    redirect("/home");
+  }
+
+  if (error.code === "otp_expired") {
+    return { error: "That code has expired or is invalid!" };
+  }
+
+  console.error({
+    cause: "supabase.auth.verifyOtp",
+    code: error.code,
+    message: error.message,
   });
 
-  revalidatePath("/", "layout");
-  redirect("/home");
+  return { error: "Something went wrong!" };
 }
