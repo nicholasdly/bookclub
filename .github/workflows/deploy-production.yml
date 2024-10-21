@@ -55,7 +55,7 @@ jobs:
         run: npm run db:migrate
 
   deploy:
-    name: Production deployment
+    name: Build and deploy
     environment:
       name: Production
       url: https://bookclub.social/
