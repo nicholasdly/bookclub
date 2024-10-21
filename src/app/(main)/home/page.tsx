@@ -169,7 +169,7 @@ export default async function HomePage() {
   }
 
   return (
-    <Page className="">
+    <Page>
       <Navbar />
       <main className="h-[1500px]">Home Page</main>
       <Sidebar side="right" className="w-96 gap-4 p-4">
