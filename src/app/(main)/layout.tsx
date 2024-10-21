@@ -1,8 +1,10 @@
 import {
   BookMarkedIcon,
+  BookmarkPlusIcon,
   CircleUserIcon,
   HomeIcon,
   InboxIcon,
+  NewspaperIcon,
   PlusIcon,
   UsersIcon,
 } from "lucide-react";
@@ -10,6 +12,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import UserButton from "@/components/user-button";
 import { createClient } from "@/lib/supabase/server";
 
@@ -28,9 +37,25 @@ async function Header() {
         </section>
         {data.user ? (
           <section className="flex items-center gap-2">
-            <Button variant="outline" size="icon">
-              <PlusIcon />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <PlusIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <BookmarkPlusIcon />
+                    New reading
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <NewspaperIcon />
+                    New post
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button variant="outline" size="icon" className="mr-1">
               <InboxIcon />
             </Button>
